@@ -1,4 +1,4 @@
-﻿namespace SkyRoute.Domains.Data
+﻿namespace SkyRoute.Domains.Entities
 {
     public class Airline
     {

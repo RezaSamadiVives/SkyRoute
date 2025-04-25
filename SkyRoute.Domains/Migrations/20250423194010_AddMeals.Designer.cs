@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SkyRoute.Domains.Data;
 
@@ -11,9 +12,11 @@ using SkyRoute.Domains.Data;
 namespace SkyRoute.Domains.Migrations
 {
     [DbContext(typeof(SkyRouteDbContext))]
-    partial class SkyRouteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423194010_AddMeals")]
+    partial class AddMeals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,9 +157,6 @@ namespace SkyRoute.Domains.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsLocalMeal")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()

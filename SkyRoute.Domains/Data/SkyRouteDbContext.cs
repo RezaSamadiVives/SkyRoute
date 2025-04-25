@@ -14,6 +14,10 @@ namespace SkyRoute.Domains.Data
         public DbSet<FlightRoute> FlightRoutes { get; set; }
         public DbSet<RouteStopover> RouteStops { get; set; }
         public DbSet<Airline> Airlines { get; set; }
+        public DbSet<Flight> Flights { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+        public DbSet<MealOption> MealOptions { get; set; }
+        public DbSet<FlightMealOption> FlightMealOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +48,19 @@ namespace SkyRoute.Domains.Data
                 .WithMany()
                 .HasForeignKey(rs => rs.StopoverCityId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FlightMealOption>()
+                .HasKey(fm => new { fm.FlightId, fm.MealOptionId });
+
+            modelBuilder.Entity<FlightMealOption>()
+                .HasOne(fm => fm.Flight)
+                .WithMany(f => f.MealOptions)
+                .HasForeignKey(fm => fm.FlightId);
+
+            modelBuilder.Entity<FlightMealOption>()
+                .HasOne(fm => fm.MealOption)
+                .WithMany(m => m.FlightMeals)
+                .HasForeignKey(fm => fm.MealOptionId);
 
             base.OnModelCreating(modelBuilder);
         }

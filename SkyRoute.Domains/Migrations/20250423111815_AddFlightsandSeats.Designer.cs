@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SkyRoute.Domains.Data;
 
@@ -11,9 +12,11 @@ using SkyRoute.Domains.Data;
 namespace SkyRoute.Domains.Migrations
 {
     [DbContext(typeof(SkyRouteDbContext))]
-    partial class SkyRouteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423111815_AddFlightsandSeats")]
+    partial class AddFlightsandSeats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,8 +77,8 @@ namespace SkyRoute.Domains.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ArrivalTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("ArrivalTime")
+                        .HasColumnType("time");
 
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
@@ -102,21 +105,6 @@ namespace SkyRoute.Domains.Migrations
                     b.ToTable("Flights");
                 });
 
-            modelBuilder.Entity("SkyRoute.Domains.Entities.FlightMealOption", b =>
-                {
-                    b.Property<int>("FlightId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MealOptionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FlightId", "MealOptionId");
-
-                    b.HasIndex("MealOptionId");
-
-                    b.ToTable("FlightMealOptions");
-                });
-
             modelBuilder.Entity("SkyRoute.Domains.Entities.FlightRoute", b =>
                 {
                     b.Property<int>("Id")
@@ -141,30 +129,6 @@ namespace SkyRoute.Domains.Migrations
                     b.HasIndex("ToCityId");
 
                     b.ToTable("FlightRoutes");
-                });
-
-            modelBuilder.Entity("SkyRoute.Domains.Entities.MealOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsLocalMeal")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MealOptions");
                 });
 
             modelBuilder.Entity("SkyRoute.Domains.Entities.RouteStopover", b =>
@@ -221,25 +185,6 @@ namespace SkyRoute.Domains.Migrations
                     b.ToTable("Seats");
                 });
 
-            modelBuilder.Entity("SkyRoute.Domains.Entities.FlightMealOption", b =>
-                {
-                    b.HasOne("SkyRoute.Domains.Entities.Flight", "Flight")
-                        .WithMany("MealOptions")
-                        .HasForeignKey("FlightId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SkyRoute.Domains.Entities.MealOption", "MealOption")
-                        .WithMany("FlightMeals")
-                        .HasForeignKey("MealOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Flight");
-
-                    b.Navigation("MealOption");
-                });
-
             modelBuilder.Entity("SkyRoute.Domains.Entities.FlightRoute", b =>
                 {
                     b.HasOne("SkyRoute.Domains.Entities.City", "FromCity")
@@ -291,19 +236,12 @@ namespace SkyRoute.Domains.Migrations
 
             modelBuilder.Entity("SkyRoute.Domains.Entities.Flight", b =>
                 {
-                    b.Navigation("MealOptions");
-
                     b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("SkyRoute.Domains.Entities.FlightRoute", b =>
                 {
                     b.Navigation("Stopovers");
-                });
-
-            modelBuilder.Entity("SkyRoute.Domains.Entities.MealOption", b =>
-                {
-                    b.Navigation("FlightMeals");
                 });
 #pragma warning restore 612, 618
         }

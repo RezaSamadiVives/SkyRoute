@@ -52,5 +52,7 @@ using(var scope = app.Services.CreateScope())
     await skyRouteDbContext.Database.MigrateAsync();
     await SeedHelper.SeedRoutesAsync(skyRouteDbContext);
     await SeedHelper.SeedAirlinesAsync(skyRouteDbContext);
+    await SeedHelper.SeedMealOptions(skyRouteDbContext);
+    await SeedHelper.SeedFlights(skyRouteDbContext);
 }
 app.Run();
