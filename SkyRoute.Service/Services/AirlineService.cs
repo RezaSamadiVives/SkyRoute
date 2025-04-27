@@ -1,12 +1,6 @@
 ﻿using SkyRoute.Domains.Entities;
-using SkyRoute.Repositories;
 using SkyRoute.Repositories.Interfaces;
 using SkyRoute.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SkyRoute.Services.Services
 {

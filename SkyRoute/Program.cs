@@ -2,6 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SkyRoute.Data;
 using SkyRoute.Domains.Data;
+using SkyRoute.Domains.Entities;
+using SkyRoute.Repositories;
+using SkyRoute.Repositories.Interfaces;
+using SkyRoute.Services.Interfaces;
+using SkyRoute.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +22,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+// Dependency Injection
+
+builder.Services.AddTransient<IService<Airline>, AirlineService>();
+builder.Services.AddTransient<IDAO<Airline>, AirlineDAO>();
 
 builder.Services.AddControllersWithViews();
 
