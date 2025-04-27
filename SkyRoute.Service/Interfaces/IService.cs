@@ -1,6 +1,6 @@
-﻿namespace SkyRoute.Repositories.Interfaces
+﻿namespace SkyRoute.Services.Interfaces
 {
-    public interface IDAO<T> where T: class
+    public interface IService<T> where T : class
     {
         Task<IEnumerable<T>?> GetAllAsync();
         Task AddAsync(T entity);
