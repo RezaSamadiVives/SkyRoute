@@ -9,6 +9,14 @@ html {
     }
 }
 
+@media (max-width: 767.98px) {
+    .navbar-nav {
+        justify-content: flex-start !important;
+        text-align: left !important;
+    }
+}
+
+
 body {
     margin-bottom: 60px;
     font-family: Arial, sans-serif;
@@ -84,32 +92,34 @@ main {
 }
 
 .navbar {
-    background-color: #007BFF !important;
+    background-color: #0079CF !important;
 }
 
 .navbar-nav .nav-link {
     color: #ffffff !important;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
 }
 
     .navbar-nav .nav-link:hover {
-        color: #FFC107 !important;
+        color: #FEBE12 !important;
     }
 
 .navbar-brand {
-    color: #FFC107 !important;
+    color: #FEBE12 !important;
 }
 
 .navbar-toggler-icon {
-    background-color: #FFC107 !important;
+    background-color: #FEBE12 !important;
 }
 
 .nav-item.active .nav-link {
-    color: #FFC107 !important;
+    color: #FEBE12 !important;
 }
 
 
 .footer {
-    background-color: #007BFF;
+    background-color: #0079CF;
     color: #ffffff !important;
     padding: 20px 0;
     text-align: center;
@@ -126,5 +136,5 @@ main {
     }
 
         .footer a:hover {
-            color: #FFC107;
+            color: #FEBE12;
         }
