@@ -1,61 +1,203 @@
-﻿@{
+﻿@model SkyRoute.ViewModels.HomeVM
+
+@{
     ViewData["Title"] = "Welkom bij SkyRoute";
 }
 
 <main>
-    <section class="container py-5 text-center">
-        <h1 class="display-4 text-primary animate-fade-in">Welkom bij SkyRoute</h1>
-        <p class="lead mt-4 animate-fade-in delay-1">
-            Bij SkyRoute maken we het boeken van vliegtickets eenvoudig, snel en betrouwbaar.<br />
-            Ontdek wereldsteden zoals New York, Londen, Tokio, Sydney en meer – allemaal binnen handbereik!
-        </p>
-        <hr class="my-4 animate-fade-in delay-2" />
-        <p class="animate-fade-in delay-3">
-            ✔️ Dagelijkse vluchten<br />
-            ✔️ Flexibele reisopties<br />
-            ✔️ Gepersonaliseerde aanbiedingen<br />
-            ✔️ Hotelreserveringen bij aankomst<br />
-            ✔️ Veilige registratie en snelle boekingen
-        </p>
-        <a href="@Url.Action("Index", "Flights")" class="btn btn-primary btn-lg mt-3 animate-fade-in delay-4">
-            Zoek jouw vlucht
-        </a>
-    </section>
-
-    <section class="bg-light py-5">
+    <section class="hero-section d-flex align-items-center text-center text-white section-background">
         <div class="container">
-            <div class="row text-center">
-                <div class="col-md-4 mb-4 animate-slide-up delay-1">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Flexibele Vluchten</h5>
-                            <p class="card-text">
-                                Kies je vertrek- en aankomststad, plan overstappen en boek tot 3 dagen voor vertrek.
-                            </p>
+            <h1 class="display-4 mb-4 animate-fade-in">Ontdek de wereld met SkyRoute</h1>
+            <p class="lead mb-5 animate-fade-in delay-1">Boek eenvoudig je volgende avontuur met één klik!</p>
+
+            <div class="booking-form bg-white text-dark p-4 rounded shadow-lg mx-auto animate-fade-in delay-2" style="max-width: 850px;">
+                <form asp-controller="Flights" asp-action="Index" method="get">
+
+                    <!-- Eerste rij: Enkel/Retour keuze -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-12 d-flex justify-content-center align-items-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="tripType" id="enkel" value="enkel" checked onchange="toggleReturnDate()">
+                                <label class="form-check-label" for="enkel">
+                                    <i class="bi bi-arrow-right-circle"></i> Enkele reis
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline ms-3">
+                                <input class="form-check-input" type="radio" name="tripType" id="retour" value="retour" onchange="toggleReturnDate()">
+                                <label class="form-check-label" for="retour">
+                                    <i class="bi bi-arrow-repeat"></i> Retour
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4 animate-slide-up delay-2">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Gepersonaliseerde Service</h5>
-                            <p class="card-text">
-                                Ontvang gerichte promoties en persoonlijke aanbevelingen op basis van jouw eerdere boekingen.
-                            </p>
+
+                    <!-- Tweede rij: Vertrek, Bestemming, Vertrekdatum, Retourdatum -->
+                    <div class="row g-3">
+                        <!-- Vertrekstad -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-airplane-engines"></i></span>
+                                <select name="from" class="form-select" id="fromCity" required onchange="updateDestinationOptions()">
+                                    <option value="">Vertrekstad</option>
+                                    @foreach (var city in Model.Cities)
+                                    {
+                                        <option value="@city.Value">@city.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Bestemming -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                <select name="to" class="form-select" id="toCity" required>
+                                    <option value="">Bestemming</option>
+                                    @foreach (var city in Model.Cities)
+                                    {
+                                        <option value="@city.Value">@city.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Vertrekdatum -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                <input type="date" name="departureDate" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <!-- Retourdatum -->
+                        <div class="col-md-3" id="returnDateContainer" style="display: none;">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                <input type="date" name="returnDate" class="form-control" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4 animate-slide-up delay-3">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Boek Meer dan Alleen Vluchten</h5>
-                            <p class="card-text">
-                                Voeg hotelovernachtingen toe en kies uit diverse maaltijdopties aan boord.
-                            </p>
+
+                    <!-- Derde rij: Aantal volwassenen & kinderen -->
+                    <div class="row g-3 mt-3">
+                        <div class="col-md-6">
+                            <label for="adults" class="form-label">Aantal Volwassenen</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="number" name="adults" class="form-control" min="1" value="1" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="children" class="form-label">Aantal Kinderen</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+                                <input type="number" name="children" class="form-control" min="0" value="0" />
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Submit knop -->
+                    <div class="mt-4" id="submitContainer">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center">
+                            <span>Zoek jouw vlucht</span>
+                            <div class="spinner-border spinner-border-sm text-light loading-spinner" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 animate-fade-in">Waarom kiezen voor SkyRoute?</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-1">
+                        <i class="bi bi-airplane-engines display-4 text-primary mb-3"></i>
+                        <h5>Dagelijkse Wereldwijde Vluchten</h5>
+                        <p>Bereik jouw droomlocaties met honderden dagelijkse routes wereldwijd.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-2">
+                        <i class="bi bi-arrow-left-right display-4 text-primary mb-3"></i>
+                        <h5>Flexibele Boekingsopties</h5>
+                        <p>Wijzig je reisdata of bestemming zonder stress, dankzij flexibele voorwaarden.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-3">
+                        <i class="bi bi-gift display-4 text-primary mb-3"></i>
+                        <h5>Exclusieve Deals & Aanbiedingen</h5>
+                        <p>Profiteer van unieke promoties afgestemd op jouw persoonlijke reisvoorkeuren.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 text-center mt-5">
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-4">
+                        <i class="bi bi-buildings display-4 text-primary mb-3"></i>
+                        <h5>Hotelreserveringen & Meer</h5>
+                        <p>Boek niet alleen vluchten, maar ook topaccommodaties en extra services bij aankomst.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-5">
+                        <i class="bi bi-shield-check display-4 text-primary mb-3"></i>
+                        <h5>Veilig & Betrouwbaar</h5>
+                        <p>Jouw gegevens zijn beschermd en elke betaling wordt veilig verwerkt.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 border rounded shadow-sm h-100 animate-slide-up delay-6">
+                        <i class="bi bi-emoji-smile display-4 text-primary mb-3"></i>
+                        <h5>24/7 Klantenservice</h5>
+                        <p>Ons vriendelijke supportteam staat altijd klaar om je te helpen, waar je ook bent.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 </main>
+
+@section Scripts {
+    <script>
+        function toggleReturnDate() {
+            var retourRadio = document.getElementById('retour');
+            var returnDateContainer = document.getElementById('returnDateContainer');
+            if (retourRadio.checked) {
+                returnDateContainer.style.display = 'block';
+            } else {
+                returnDateContainer.style.display = 'none';
+            }
+        }
+
+        function updateDestinationOptions() {
+            var fromCitySelect = document.getElementById('fromCity');
+            var toCitySelect = document.getElementById('toCity');
+            var selectedFrom = fromCitySelect.value;
+
+            for (var i = 0; i < toCitySelect.options.length; i++) {
+                var option = toCitySelect.options[i];
+                option.disabled = false;
+                if (option.value === selectedFrom && option.value !== "") {
+                    option.disabled = true;
+                }
+            }
+
+            if (toCitySelect.value === selectedFrom) {
+                toCitySelect.value = "";
+            }
+        }
+
+        document.querySelector('form').addEventListener('submit', function () {
+            var submitContainer = document.getElementById('submitContainer');
+            submitContainer.classList.add('loading');
+        });
+    </script>
+}
+

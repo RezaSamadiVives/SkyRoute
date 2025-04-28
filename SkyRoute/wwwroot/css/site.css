@@ -16,7 +16,6 @@ html {
     }
 }
 
-
 body {
     margin-bottom: 60px;
     font-family: Arial, sans-serif;
@@ -26,7 +25,6 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
-
 
 main {
     flex: 1;
@@ -49,7 +47,13 @@ main {
     }
 }
 
-
+/* Animations */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 .animate-fade-in {
     opacity: 0;
@@ -59,20 +63,7 @@ main {
 .animate-slide-up {
     opacity: 0;
     transform: translateY(20px);
-    animation: slideUp 1s forwards;
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    animation: fadeIn 1s forwards;
 }
 
 .delay-1 {
@@ -91,6 +82,7 @@ main {
     animation-delay: 2s;
 }
 
+/* Navbar */
 .navbar {
     background-color: #0079CF !important;
 }
@@ -117,7 +109,7 @@ main {
     color: #FEBE12 !important;
 }
 
-
+/* Footer */
 .footer {
     background-color: #0079CF;
     color: #ffffff !important;
@@ -125,9 +117,6 @@ main {
     text-align: center;
     width: 100%;
     position: relative;
-}
-
-.footer {
     margin-top: auto;
 }
 
@@ -138,3 +127,69 @@ main {
         .footer a:hover {
             color: #FEBE12;
         }
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(to bottom right, #0079CF, #00BFFF); /* aangepast */
+    color: white;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Booking Form */
+.booking-form input,
+.booking-form button {
+    border-radius: 0.75rem;
+}
+
+    .booking-form input:focus {
+        box-shadow: 0 0 5px rgba(0,123,255,0.5);
+        border-color: #0079CF;
+    }
+
+.small-hero {
+    min-height: 40vh;
+    background: linear-gradient(to right, #0079CF, #00BFFF);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+
+.section-background {
+    background-color: #007BFF;
+    min-height: 70vh;
+}
+
+input:focus, select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effect op de zoek-knop */
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Spinner zichtbaar bij laden */
+.loading-spinner {
+    display: none;
+    margin-left: 10px;
+}
+
+.loading .loading-spinner {
+    display: inline-block;
+}
+
+.loading button span {
+    display: none;
+}
