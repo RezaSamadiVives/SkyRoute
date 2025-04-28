@@ -1,8 +1,61 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welkom bij SkyRoute";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<main>
+    <section class="container py-5 text-center">
+        <h1 class="display-4 text-primary animate-fade-in">Welkom bij SkyRoute ✈️</h1>
+        <p class="lead mt-4 animate-fade-in delay-1">
+            Bij SkyRoute maken we het boeken van vliegtickets eenvoudig, snel en betrouwbaar.<br />
+            Ontdek wereldsteden zoals New York, Londen, Tokio, Sydney en meer – allemaal binnen handbereik!
+        </p>
+        <hr class="my-4 animate-fade-in delay-2" />
+        <p class="animate-fade-in delay-3">
+            ✔️ Dagelijkse vluchten<br />
+            ✔️ Flexibele reisopties<br />
+            ✔️ Gepersonaliseerde aanbiedingen<br />
+            ✔️ Hotelreserveringen bij aankomst<br />
+            ✔️ Veilige registratie en snelle boekingen
+        </p>
+        <a href="@Url.Action("Index", "Flights")" class="btn btn-primary btn-lg mt-3 animate-fade-in delay-4">
+            Zoek jouw vlucht
+        </a>
+    </section>
+
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 mb-4 animate-slide-up delay-1">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Flexibele Vluchten</h5>
+                            <p class="card-text">
+                                Kies je vertrek- en aankomststad, plan overstappen en boek tot 3 dagen voor vertrek.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 animate-slide-up delay-2">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Gepersonaliseerde Service</h5>
+                            <p class="card-text">
+                                Ontvang gerichte promoties en persoonlijke aanbevelingen op basis van jouw eerdere boekingen.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4 animate-slide-up delay-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Boek Meer dan Alleen Vluchten</h5>
+                            <p class="card-text">
+                                Voeg hotelovernachtingen toe en kies uit diverse maaltijdopties aan boord.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
