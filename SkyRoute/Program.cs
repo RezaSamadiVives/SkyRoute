@@ -31,6 +31,9 @@ builder.Services.AddTransient<IDAO<Airline>, AirlineDAO>();
 
 builder.Services.AddControllersWithViews();
 
+// Automapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
