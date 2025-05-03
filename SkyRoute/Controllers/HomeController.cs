@@ -1,61 +1,47 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SkyRoute.Domains.Entities;
 using SkyRoute.Models;
+using SkyRoute.Services.Interfaces;
 using SkyRoute.ViewModels;
 using System.Diagnostics;
 
 namespace SkyRoute.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IService<City> cityService) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IService<City> cityService = cityService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public async Task<IActionResult> Index()
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            var model = new HomeVM
-            {
-                Cities =
-                [
-                    new SelectListItem { Value = "NYC", Text = "New York" },
-                    new SelectListItem { Value = "LON", Text = "Londen" },
-                    new SelectListItem { Value = "TYO", Text = "Tokio" },
-                    new SelectListItem { Value = "SYD", Text = "Sydney" },
-                    new SelectListItem { Value = "DXB", Text = "Dubai" },
-                    new SelectListItem { Value = "CPT", Text = "Kaapstad" },
-                    new SelectListItem { Value = "SIN", Text = "Singapore" }
-                ]
-            };
-
+            var model = new HomeVM();
+            await PopulateCities(model);
             model.DepartureDate = DateTime.Now.AddDays(3);
             
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Index(HomeVM model)
+        public async Task<IActionResult> Index(HomeVM model)
         {
+            await PopulateCities(model);
+
             if (!ModelState.IsValid) { 
             return View(model);
             }
 
             return RedirectToAction("SearchFlights", "FlightSearch", new
             {
-                model.DepartureCity,
-                model.DestinationCity,
-                model.DepartureDate,
-                model.ReturnDate,
-                model.SelectedTripType,
-                model.SelectedTripClass,
-                model.AdultPassengers,
-                model.KidsPassengers
+                departureCity = model.DepartureCity,
+                destinationCity = model.DestinationCity,
+                departureDate = model.DepartureDate,
+                returnDate = model.ReturnDate,
+                tripType = model.SelectedTripType,
+                tripClass = model.SelectedTripClass,
+                adultPassengers = model.AdultPassengers,
+                kidsPassengers = model.KidsPassengers
             });
         }
-
         public IActionResult Privacy()
         {
             return View();
@@ -71,5 +57,16 @@ namespace SkyRoute.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        private async Task PopulateCities(HomeVM model)
+        {
+            var cities = await cityService.GetAllAsync();
+            model.Cities =
+            [
+                .. from city in cities
+                                      select new SelectListItem { Value = city.Id.ToString(), Text = city.Name },
+            ];
+        }
+
     }
 }
