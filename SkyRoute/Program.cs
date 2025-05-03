@@ -29,6 +29,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddTransient<IService<Airline>, AirlineService>();
 builder.Services.AddTransient<IDAO<Airline>, AirlineDAO>();
 
+builder.Services.AddTransient<IService<City>, CityService>();
+builder.Services.AddTransient<IDAO<City>, CityDAO>();
+
 builder.Services.AddControllersWithViews();
 
 // Automapper
