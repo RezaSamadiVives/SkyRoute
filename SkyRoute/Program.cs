@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SkyRoute.Data;
 using SkyRoute.Domains.Data;
 using SkyRoute.Domains.Entities;
-using SkyRoute.Repositories;
 using SkyRoute.Repositories.Interfaces;
+using SkyRoute.Repositories.Repositories;
 using SkyRoute.Services.Interfaces;
 using SkyRoute.Services.Services;
 

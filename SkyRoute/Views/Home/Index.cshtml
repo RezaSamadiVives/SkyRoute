@@ -3,46 +3,62 @@
 @{
     ViewData["Title"] = "Welkom bij SkyRoute";
 }
+ <main>
+ 
 
-<main>
     <section class="hero-section d-flex align-items-center text-center text-white section-background">
         <div class="container">
             <h1 class="display-4 mb-4 animate-fade-in">Ontdek de wereld met SkyRoute</h1>
             <p class="lead mb-5 animate-fade-in delay-1">Boek eenvoudig je volgende avontuur met één klik!</p>
 
             <div class="booking-form bg-white text-dark p-4 rounded shadow-lg mx-auto animate-fade-in delay-2" style="max-width: 850px;">
-                <form asp-controller="Flights" asp-action="Index" method="get">
+                <form asp-controller="Home" asp-action="Index" method="post">
+                    <partial name="_ValidationScriptsPartial" />
+                    <div asp-validation-summary="All" class="text-danger"></div>
 
-                    <!-- Eerste rij: Enkel/Retour keuze -->
+                    
+                    <!-- Enkel/Retour keuze -->
                     <div class="row g-3 mb-3">
-                        <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <div class="col-md-6 d-flex justify-content-center align-items-center">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="tripType" id="enkel" value="enkel" checked onchange="toggleReturnDate()">
+                                <input class="form-check-input" type="radio" asp-for="SelectedTripType" id="enkel" value="enkel" onchange="toggleReturnDate()" />
                                 <label class="form-check-label" for="enkel">
                                     <i class="bi bi-arrow-right-circle"></i> Enkele reis
                                 </label>
                             </div>
-                            <div class="form-check form-check-inline ms-3">
-                                <input class="form-check-input" type="radio" name="tripType" id="retour" value="retour" onchange="toggleReturnDate()">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="SelectedTripType" id="retour" value="retour" onchange="toggleReturnDate()" />
                                 <label class="form-check-label" for="retour">
                                     <i class="bi bi-arrow-repeat"></i> Retour
                                 </label>
                             </div>
                         </div>
+                        <!-- Economy / Business -->
+                        <div class="col-md-6 d-flex justify-content-center align-items-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="SelectedTripClass" id="business" value="business" />
+                                <label class="form-check-label" for="business">
+                                    <i class="bi bi-briefcase-fill"></i> Business
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="SelectedTripClass" id="economy" value="economy" />
+                                <label class="form-check-label" for="economy">
+                                    <i class="bi bi-cash-coin"></i> Economy
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <!-- Tweede rij: Vertrek, Bestemming, Vertrekdatum, Retourdatum -->
+                    <!-- Vertrek, Bestemming, Data -->
                     <div class="row g-3">
                         <!-- Vertrekstad -->
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-airplane-engines"></i></span>
-                                <select name="from" class="form-select" id="fromCity" required onchange="updateDestinationOptions()">
+                                <select asp-for="DepartureCity" class="form-select" asp-items="Model.Cities" id="fromCity" onchange="updateDestinationOptions()">
                                     <option value="">Vertrekstad</option>
-                                    @foreach (var city in Model.Cities)
-                                    {
-                                        <option value="@city.Value">@city.Text</option>
-                                    }
                                 </select>
                             </div>
                         </div>
@@ -51,12 +67,8 @@
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                <select name="to" class="form-select" id="toCity" required>
+                                <select asp-for="DestinationCity" class="form-select" asp-items="Model.Cities" id="toCity">
                                     <option value="">Bestemming</option>
-                                    @foreach (var city in Model.Cities)
-                                    {
-                                        <option value="@city.Value">@city.Text</option>
-                                    }
                                 </select>
                             </div>
                         </div>
@@ -65,7 +77,7 @@
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-                                <input type="date" name="departureDate" class="form-control" required />
+                                <input asp-for="DepartureDate" type="date" class="form-control" />
                             </div>
                         </div>
 
@@ -73,30 +85,30 @@
                         <div class="col-md-3" id="returnDateContainer" style="display: none;">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
-                                <input type="date" name="returnDate" class="form-control" />
+                                <input asp-for="ReturnDate" type="date" class="form-control" />
                             </div>
                         </div>
                     </div>
 
-                    <!-- Derde rij: Aantal volwassenen & kinderen -->
+                    <!-- Passagiers -->
                     <div class="row g-3 mt-3">
                         <div class="col-md-6">
-                            <label for="adults" class="form-label">Aantal Volwassenen</label>
+                            <label asp-for="AdultPassengers" class="form-label">Aantal Volwassenen</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="number" name="adults" class="form-control" min="1" value="1" required />
+                                <input asp-for="AdultPassengers" type="number" class="form-control" min="1" />
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="children" class="form-label">Aantal Kinderen</label>
+                            <label asp-for="KidsPassengers" class="form-label">Aantal Kinderen</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
-                                <input type="number" name="children" class="form-control" min="0" value="0" />
+                                <input asp-for="KidsPassengers" type="number" class="form-control" min="0" />
                             </div>
                         </div>
                     </div>
 
-                    <!-- Submit knop -->
+                    <!-- Submit -->
                     <div class="mt-4" id="submitContainer">
                         <button type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center">
                             <span>Zoek jouw vlucht</span>
@@ -109,6 +121,7 @@
             </div>
         </div>
     </section>
+
     <section class="bg-light py-5">
         <div class="container">
             <h2 class="text-center mb-5 animate-fade-in">Waarom kiezen voor SkyRoute?</h2>
@@ -161,43 +174,10 @@
 
         </div>
     </section>
+    @section Scripts {
+        <script src="~/js/home.js"></script>
+    }
 
 </main>
 
-@section Scripts {
-    <script>
-        function toggleReturnDate() {
-            var retourRadio = document.getElementById('retour');
-            var returnDateContainer = document.getElementById('returnDateContainer');
-            if (retourRadio.checked) {
-                returnDateContainer.style.display = 'block';
-            } else {
-                returnDateContainer.style.display = 'none';
-            }
-        }
-
-        function updateDestinationOptions() {
-            var fromCitySelect = document.getElementById('fromCity');
-            var toCitySelect = document.getElementById('toCity');
-            var selectedFrom = fromCitySelect.value;
-
-            for (var i = 0; i < toCitySelect.options.length; i++) {
-                var option = toCitySelect.options[i];
-                option.disabled = false;
-                if (option.value === selectedFrom && option.value !== "") {
-                    option.disabled = true;
-                }
-            }
-
-            if (toCitySelect.value === selectedFrom) {
-                toCitySelect.value = "";
-            }
-        }
-
-        document.querySelector('form').addEventListener('submit', function () {
-            var submitContainer = document.getElementById('submitContainer');
-            submitContainer.classList.add('loading');
-        });
-    </script>
-}
 

@@ -130,7 +130,7 @@ main {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(to bottom right, #0079CF, #00BFFF); /* aangepast */
+    background: linear-gradient(to bottom right, #0079CF, #00BFFF); 
     color: white;
     min-height: 70vh;
     display: flex;

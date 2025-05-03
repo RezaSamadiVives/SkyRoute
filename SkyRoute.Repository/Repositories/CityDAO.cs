@@ -3,13 +3,13 @@ using SkyRoute.Domains.Data;
 using SkyRoute.Domains.Entities;
 using SkyRoute.Repositories.Interfaces;
 
-namespace SkyRoute.Repositories
+namespace SkyRoute.Repositories.Repositories
 {
-    public class AirlineDAO(SkyRouteDbContext context) : IDAO<Airline>
+    public class CityDAO(SkyRouteDbContext context) : IDAO<City>
     {
         private readonly SkyRouteDbContext _context = context;
 
-        public async Task AddAsync(Airline entity)
+        public async Task AddAsync(City entity)
         {
             _context.Entry(entity).State = EntityState.Added;
             try
@@ -24,7 +24,7 @@ namespace SkyRoute.Repositories
             }
         }
 
-        public async Task DeleteAsync(Airline entity)
+        public async Task DeleteAsync(City entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
             try
@@ -39,11 +39,11 @@ namespace SkyRoute.Repositories
             }
         }
 
-        public async Task<Airline?> FindByIdAsync(int Id)
+        public async Task<City?> FindByIdAsync(int Id)
         {
             try
             {
-                return await _context.Airlines.Where(a => a.Id == Id).FirstOrDefaultAsync();
+                return await _context.Cities.Where(a => a.Id == Id).FirstOrDefaultAsync();
             }
             catch (Exception)
             {
@@ -51,11 +51,11 @@ namespace SkyRoute.Repositories
             }
         }
 
-        public async Task<IEnumerable<Airline>?> GetAllAsync()
+        public async Task<IEnumerable<City>?> GetAllAsync()
         {
             try
             {
-                return await _context.Airlines.ToListAsync();
+                return await _context.Cities.ToListAsync();
 
             }
             catch (Exception)
@@ -64,12 +64,11 @@ namespace SkyRoute.Repositories
             }
         }
 
-        public async Task UpdateAsync(Airline entity)
+        public async Task UpdateAsync(City entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             try
             {
-
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

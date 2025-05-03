@@ -30,8 +30,30 @@ namespace SkyRoute.Controllers
                     new SelectListItem { Value = "SIN", Text = "Singapore" }
                 ]
             };
+
+            model.DepartureDate = DateTime.Now.AddDays(3);
             
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Index(HomeVM model)
+        {
+            if (!ModelState.IsValid) { 
+            return View(model);
+            }
+
+            return RedirectToAction("SearchFlights", "FlightSearch", new
+            {
+                model.DepartureCity,
+                model.DestinationCity,
+                model.DepartureDate,
+                model.ReturnDate,
+                model.SelectedTripType,
+                model.SelectedTripClass,
+                model.AdultPassengers,
+                model.KidsPassengers
+            });
         }
 
         public IActionResult Privacy()
