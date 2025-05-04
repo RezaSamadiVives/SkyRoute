@@ -25,12 +25,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 
 // Dependency Injection
+builder.Services.AddTransient(typeof(IDAO<>), typeof(BaseDAO<>));
+builder.Services.AddTransient(typeof(IService<>), typeof(BaseService<>));
 
-builder.Services.AddTransient<IService<Airline>, AirlineService>();
-builder.Services.AddTransient<IDAO<Airline>, AirlineDAO>();
+builder.Services.AddTransient<IService<Flight>, FlightSearchService>();
 
-builder.Services.AddTransient<IService<City>, CityService>();
-builder.Services.AddTransient<IDAO<City>, CityDAO>();
 
 builder.Services.AddControllersWithViews();
 
