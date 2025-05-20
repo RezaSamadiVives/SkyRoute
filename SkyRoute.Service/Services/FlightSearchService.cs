@@ -1,20 +1,18 @@
 ﻿using SkyRoute.Domains.Entities;
 using SkyRoute.Repositories.Interfaces;
+using SkyRoute.Repositories.Models;
+using SkyRoute.Services.Interfaces;
 
 namespace SkyRoute.Services.Services
 {
-    public class FlightSearchService : BaseService<Flight>, IFlightSearchDAO
+    public class FlightSearchService(IFlightSearchDAO flightSearchDAO) : BaseService<Flight>(flightSearchDAO), IFlightSearchService
     {
-        private readonly IDAO<Flight> _dao;
+        private readonly IFlightSearchDAO _flightSearchDAO = flightSearchDAO;
 
-        public FlightSearchService(IDAO<Flight> dao): base(dao)
+        public async Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId, DateTime departureDate, 
+            DateTime? returnDate, bool isBusiness, bool Retour, int adultCount, int? kidCount)
         {
-            _dao = dao;
-        }
-        public Task<IEnumerable<Flight>> SearchFlightsAsync(string fromCity, string toCity, DateTime departureDate, 
-            DateTime? returnDate, string tripClass, string tripType, int adultCount, int? kidCount)
-        {
-            throw new NotImplementedException();
+            return await _flightSearchDAO.SearchFlightsAsync(fromCityId, toCityId, departureDate, returnDate, isBusiness, Retour, adultCount, kidCount);
         }
     }
 }

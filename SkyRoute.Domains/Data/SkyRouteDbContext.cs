@@ -3,13 +3,8 @@ using SkyRoute.Domains.Entities;
 
 namespace SkyRoute.Domains.Data
 {
-    public class SkyRouteDbContext : DbContext
+    public class SkyRouteDbContext(DbContextOptions<SkyRouteDbContext> options) : DbContext(options)
     {
-        public SkyRouteDbContext(DbContextOptions<SkyRouteDbContext> options) : base(options)
-        {
-        }
-
-        
         public DbSet<City> Cities { get; set; }
         public DbSet<FlightRoute> FlightRoutes { get; set; }
         public DbSet<RouteStopover> RouteStops { get; set; }
@@ -21,6 +16,20 @@ namespace SkyRoute.Domains.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Flight -> FromCity
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.FromCity)
+                .WithMany()
+                .HasForeignKey(f => f.FromCityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Flight -> ToCity
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.ToCity)
+                .WithMany()
+                .HasForeignKey(f => f.ToCityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // FlightRoute -> City (From)
             modelBuilder.Entity<FlightRoute>()
                 .HasOne(fr => fr.FromCity)

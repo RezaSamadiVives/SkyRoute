@@ -8,6 +8,6 @@
         public required bool IsBusiness { get; set; }
         public required bool IsAvailable { get; set; }
 
-        public virtual Flight Flight { get; set; }
+        public virtual required Flight Flight { get; set; }
     }
 }

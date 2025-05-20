@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseLazyLoadingProxies().UseSqlServer(connectionString));
 
 
 builder.Services.AddDbContext<SkyRouteDbContext>(options => options.UseSqlServer(connectionString));
@@ -25,10 +25,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 
 // Dependency Injection
-builder.Services.AddTransient(typeof(IDAO<>), typeof(BaseDAO<>));
-builder.Services.AddTransient(typeof(IService<>), typeof(BaseService<>));
+// Generic DI
+builder.Services.AddScoped(typeof(IDAO<>), typeof(BaseDAO<>));
+builder.Services.AddScoped(typeof(IService<>), typeof(BaseService<>));
 
-builder.Services.AddTransient<IService<Flight>, FlightSearchService>();
+// Flight-specific
+builder.Services.AddScoped<IFlightSearchDAO, FlightSearchDAO>();
+builder.Services.AddScoped<IFlightSearchService, FlightSearchService>();
+builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
+
 
 
 builder.Services.AddControllersWithViews();

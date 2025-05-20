@@ -131,118 +131,255 @@ namespace SkyRoute.Domains.Data
             await context.SaveChangesAsync();
         }
 
+        //public static async Task SeedFlights(SkyRouteDbContext context)
+        //{
+        //    if (context.Flights.Any()) return;
+
+        //    var startDate = DateTime.Today.AddDays(3);
+        //    var endDate = DateTime.Today.AddMonths(7);
+
+        //    var airlines = context.Airlines.ToList();
+        //    var routes = context.FlightRoutes
+        //        .Include(r => r.FromCity)
+        //        .Include(r => r.ToCity)
+        //        .Include(r => r.Stopovers)
+        //        .ThenInclude(s => s.StopoverCity)
+        //        .ToList();
+
+        //    var allMeals = context.MealOptions.ToList();
+
+        //    foreach (var route in routes)
+        //    {
+        //        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        //        {
+        //            var shuffledAirlines = airlines.OrderBy(_ => _random.Next()).ToList();
+
+        //            for (int i = 0; i < 3; i++)
+        //            {
+        //                var airline = shuffledAirlines[i];
+        //                var departureTime = TimeSpan.FromHours(6 + i * 4);
+        //                var departureDateTime = date.Date + departureTime;
+        //                var currentTime = departureDateTime;
+
+        //                var stopsOrdered = route.Stopovers.OrderBy(s => s.Order).ToList();
+        //                var cities = new List<string> { route.FromCity.Name };
+        //                cities.AddRange(stopsOrdered.Select(s => s.StopoverCity.Name));
+        //                cities.Add(route.ToCity.Name);
+
+        //                // Seizoensgebonden prijsverhoging
+        //                decimal priceMultiplier = 1m;
+        //                if ((route.FromCity.Name == "Londen" || route.ToCity.Name == "Londen" ||
+        //                     route.FromCity.Name == "New York" || route.ToCity.Name == "New York") && date.Month == 11)
+        //                {
+        //                    priceMultiplier = 1.3m;
+        //                }
+        //                else if ((route.FromCity.Name == "Tokio" || route.ToCity.Name == "Tokio" ||
+        //                          route.FromCity.Name == "Singapore" || route.ToCity.Name == "Singapore" ||
+        //                          route.FromCity.Name == "Dubai" || route.ToCity.Name == "Dubai") &&
+        //                         (date.Month == 7 || date.Month == 8))
+        //                {
+        //                    priceMultiplier = 1.3m;
+        //                }
+
+        //                for (int j = 0; j < cities.Count - 1; j++)
+        //                {
+        //                    var from = cities[j];
+        //                    var to = cities[j + 1];
+        //                    var flightDuration = TimeSpan.FromHours(_random.Next(6, 10));
+        //                    var arrivalTime = currentTime + flightDuration;
+
+        //                    var flight = new Flight
+        //                    {
+        //                        FromCity = from,
+        //                        ToCity = to,
+        //                        Airline = airline.Name,
+        //                        FlightDate = date,
+        //                        DepartureTime = currentTime.TimeOfDay,
+        //                        ArrivalTime = arrivalTime,
+        //                        PriceEconomy = GetRandomPrice(200, 800) * priceMultiplier,
+        //                        PriceBusiness = GetRandomPrice(800, 1600) * priceMultiplier,
+        //                        Seats = new List<Seat>(),
+        //                        MealOptions = new List<FlightMealOption>()
+        //                    };
+
+        //                    var seats = GenerateSeats(flight);
+        //                    foreach (var seat in seats)
+        //                    {
+        //                        seat.Flight = flight;
+        //                        flight.Seats.Add(seat);
+        //                    } 
+
+        //                    context.Flights.Add(flight);
+        //                    await context.SaveChangesAsync();
+
+
+
+        //                    foreach (var meal in allMeals)
+        //                    {
+        //                        if (!meal.IsLocalMeal)
+        //                        {
+        //                            context.FlightMealOptions.Add(new FlightMealOption
+        //                            {
+        //                                Flight = flight,
+        //                                MealOption = meal,
+        //                            });
+        //                        }
+        //                    }
+
+        //                    var localMeal = allMeals.FirstOrDefault(x =>
+        //                        x.Name.ToLower().Contains(to.ToLower()) && x.IsLocalMeal);
+        //                    if (localMeal != null)
+        //                    {
+        //                        context.FlightMealOptions.Add(new FlightMealOption
+        //                        {
+        //                            Flight = flight,
+        //                            MealOption = localMeal,
+        //                        });
+        //                    }
+
+        //                    await context.SaveChangesAsync();
+
+        //                    // Overstaptijd van 2 uur (behalve laatste segment)
+        //                    if (j < cities.Count - 2)
+        //                    {
+        //                        currentTime = arrivalTime + TimeSpan.FromHours(2);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+
         public static async Task SeedFlights(SkyRouteDbContext context)
         {
             if (context.Flights.Any()) return;
 
             var startDate = DateTime.Today.AddDays(3);
-            var endDate = DateTime.Today.AddMonths(7);
+            var endDate = DateTime.Today.AddMonths(3);
 
-            var airlines = context.Airlines.ToList();
-            var routes = context.FlightRoutes
+            var airlines = await context.Airlines.ToListAsync();
+            var routes = await context.FlightRoutes
                 .Include(r => r.FromCity)
                 .Include(r => r.ToCity)
                 .Include(r => r.Stopovers)
                 .ThenInclude(s => s.StopoverCity)
-                .ToList();
+                .ToListAsync();
 
-            var allMeals = context.MealOptions.ToList();
+            var allMeals = await context.MealOptions.ToListAsync();
+
 
             foreach (var route in routes)
             {
+                var cities = BuildCityPath(route);
+
                 for (var date = startDate; date <= endDate; date = date.AddDays(1))
                 {
                     var shuffledAirlines = airlines.OrderBy(_ => _random.Next()).ToList();
 
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < airlines.Count; i++)
                     {
                         var airline = shuffledAirlines[i];
                         var departureTime = TimeSpan.FromHours(6 + i * 4);
-                        var departureDateTime = date.Date + departureTime;
-                        var currentTime = departureDateTime;
+                        var currentTime = date.Date + departureTime;
 
-                        var stopsOrdered = route.Stopovers.OrderBy(s => s.Order).ToList();
-                        var cities = new List<string> { route.FromCity.Name };
-                        cities.AddRange(stopsOrdered.Select(s => s.StopoverCity.Name));
-                        cities.Add(route.ToCity.Name);
-
-                        // Seizoensgebonden prijsverhoging
-                        decimal priceMultiplier = 1m;
-                        if ((route.FromCity.Name == "Londen" || route.ToCity.Name == "Londen" ||
-                             route.FromCity.Name == "New York" || route.ToCity.Name == "New York") && date.Month == 11)
-                        {
-                            priceMultiplier = 1.3m;
-                        }
-                        else if ((route.FromCity.Name == "Tokio" || route.ToCity.Name == "Tokio" ||
-                                  route.FromCity.Name == "Singapore" || route.ToCity.Name == "Singapore" ||
-                                  route.FromCity.Name == "Dubai" || route.ToCity.Name == "Dubai") &&
-                                 (date.Month == 7 || date.Month == 8))
-                        {
-                            priceMultiplier = 1.3m;
-                        }
+                        decimal priceMultiplier = GetSeasonalPriceMultiplier(route, date);
+                        Guid segmentId = Guid.NewGuid();
+                        var flightsToAdd = new List<Flight>();
 
                         for (int j = 0; j < cities.Count - 1; j++)
                         {
                             var from = cities[j];
                             var to = cities[j + 1];
                             var flightDuration = TimeSpan.FromHours(_random.Next(6, 10));
-                            var arrivalTime = currentTime + flightDuration;
+                            var arrivalDateTime = currentTime + flightDuration;
 
                             var flight = new Flight
                             {
-                                FromCity = from,
-                                ToCity = to,
-                                Airline = airline.Name,
-                                FlightDate = date,
+                                FlightNumber = $"{from.Name[..2].ToUpper()}{to.Name[..2].ToUpper()}{(j * 2):D3}",
+                                FromCityId = from.Id,
+                                ToCityId = to.Id,
+                                AirlineId = airline.Id,
+                                FlightRouteId = route.Id,
+                                SegmentId = segmentId,
+                                FlightDate = currentTime.Date,
                                 DepartureTime = currentTime.TimeOfDay,
-                                ArrivalTime = arrivalTime,
-                                PriceEconomy = GetRandomPrice(200, 800) * priceMultiplier,
-                                PriceBusiness = GetRandomPrice(800, 1600) * priceMultiplier,
-                                Seats = GenerateSeats()
+                                ArrivalDate = arrivalDateTime.Date,
+                                ArrivalTime = arrivalDateTime.TimeOfDay,
+                                PriceEconomy = GetRandomPrice(600, 800) * priceMultiplier,
+                                PriceBusiness = GetRandomPrice(800, 1000) * priceMultiplier,
+                                Seats = [],
+                                MealOptions = []
                             };
 
-                            context.Flights.Add(flight);
-                            await context.SaveChangesAsync(); // nodig voor correcte Flight.Id
+                            var seats = GenerateSeats(flight);
+                            flight.Seats = seats;
 
-                            // 🍽️ Maaltijden toevoegen volgens jouw structuur
-                            foreach (var meal in allMeals)
-                            {
-                                if (!meal.IsLocalMeal)
-                                {
-                                    context.FlightMealOptions.Add(new FlightMealOption
-                                    {
-                                        Flight = flight,
-                                        MealOption = meal,
-                                    });
-                                }
-                            }
+                            var meals = GetFlightMealOptions(allMeals, to.Name, flight);
+                            flight.MealOptions = meals;
 
-                            var localMeal = allMeals.FirstOrDefault(x =>
-                                x.Name.ToLower().Contains(to.ToLower()) && x.IsLocalMeal);
-                            if (localMeal != null)
-                            {
-                                context.FlightMealOptions.Add(new FlightMealOption
-                                {
-                                    Flight = flight,
-                                    MealOption = localMeal,
-                                });
-                            }
+                            flightsToAdd.Add(flight);
+                            //context.Flights.Add(flight);
+                            //await context.SaveChangesAsync();
 
-                            await context.SaveChangesAsync();
-
-                            // Overstaptijd van 2 uur (behalve laatste segment)
                             if (j < cities.Count - 2)
                             {
-                                currentTime = arrivalTime + TimeSpan.FromHours(2);
+                                currentTime = arrivalDateTime + TimeSpan.FromHours(2);// transfer time
+                            }
+                            else
+                            {
+                                currentTime = arrivalDateTime;
                             }
                         }
+                        await context.Flights.AddRangeAsync(flightsToAdd);
+                        await context.SaveChangesAsync();
                     }
                 }
             }
         }
 
+        private static List<City> BuildCityPath(FlightRoute route)
+        {
+            var cities = new List<City> { route.FromCity };
+            cities.AddRange(route.Stopovers.OrderBy(s => s.Order).Select(s => s.StopoverCity));
+            cities.Add(route.ToCity);
+            return cities;
+        }
 
-        private static List<Seat> GenerateSeats()
+        private static decimal GetSeasonalPriceMultiplier(FlightRoute route, DateTime date)
+        {
+            var highSeasonCities = new[] { "Londen", "New York", "Tokio", "Singapore", "Dubai" };
+
+            if ((highSeasonCities.Contains(route.FromCity.Name) || highSeasonCities.Contains(route.ToCity.Name)) &&
+                ((route.FromCity.Name is "Londen" or "New York") && date.Month == 11 ||
+                 (route.FromCity.Name is "Tokio" or "Singapore" or "Dubai") && (date.Month == 7 || date.Month == 8)))
+            {
+                return 1.3m;
+            }
+
+            return 1m;
+        }
+
+
+        private static List<FlightMealOption> GetFlightMealOptions(List<MealOption> allMeals, string toCity, Flight flight)
+        {
+            var meals = allMeals
+                .Where(m => !m.IsLocalMeal)
+                .Select(m => new FlightMealOption { MealOption = m, Flight = flight })
+                .ToList();
+
+            var local = allMeals
+                .FirstOrDefault(x => x.IsLocalMeal && x.Name.Contains(toCity, StringComparison.OrdinalIgnoreCase));
+
+            if (local != null)
+            {
+                meals.Add(new FlightMealOption { MealOption = local, Flight = flight });
+            }
+
+            return meals;
+        }
+
+        private static List<Seat> GenerateSeats(Flight flight)
         {
 
 
@@ -266,78 +403,13 @@ namespace SkyRoute.Domains.Data
                     {
                         SeatNumber = seatNumber,
                         IsBusiness = isBusiness,
-                        IsAvailable = true
+                        IsAvailable = true,
+                        Flight = flight,
                     });
                 }
             }
 
             return seats;
-        }
-
-        private static (TimeSpan arrivalTime, TimeSpan totalDuration, List<string> segments) CalculateFlightTimesWithSegments(FlightRoute route, TimeSpan departure)
-        {
-            const int minFlightHours = 2;
-            const int maxFlightHours = 6;
-            const int minTransitHours = 2;
-
-            var totalTime = TimeSpan.Zero;
-            var currentTime = departure;
-            var segments = new List<string>();
-
-            var legs = new List<string> { route.FromCity.Name };
-            legs.AddRange(route.Stopovers.OrderBy(s => s.Order).Select(s => s.StopoverCity.Name));
-            legs.Add(route.ToCity.Name);
-
-            for (int i = 0; i < legs.Count - 1; i++)
-            {
-                var from = legs[i];
-                var to = legs[i + 1];
-                var legDuration = TimeSpan.FromHours(_random.Next(minFlightHours, maxFlightHours + 1));
-
-                segments.Add($"{from} → {to} ({legDuration.TotalHours} uur)");
-
-                totalTime += legDuration;
-                currentTime += legDuration;
-
-                if (i < legs.Count - 2)
-                {
-                    segments.Add($"Overstap: {minTransitHours} uur");
-                    totalTime += TimeSpan.FromHours(minTransitHours);
-                    currentTime += TimeSpan.FromHours(minTransitHours);
-                }
-            }
-
-            return (currentTime, totalTime, segments);
-        }
-
-
-        private static (TimeSpan arrivalTime, TimeSpan duration) CalculateFlightTimes(FlightRoute route, TimeSpan departure)
-        {
-            const int minFlightHours = 2;
-            const int maxFlightHours = 6;
-            const int minTransitHours = 2;
-
-            var totalTime = TimeSpan.Zero;
-            var currentTime = departure;
-
-            var legs = new List<string> { route.FromCity.Name };
-            legs.AddRange(route.Stopovers.OrderBy(s => s.Order).Select(s => s.StopoverCity.Name));
-            legs.Add(route.ToCity.Name);
-
-            for (int i = 0; i < legs.Count - 1; i++)
-            {
-                var legDuration = TimeSpan.FromHours(_random.Next(minFlightHours, maxFlightHours + 1));
-                totalTime += legDuration;
-                currentTime += legDuration;
-
-                if (i < legs.Count - 2)
-                {
-                    totalTime += TimeSpan.FromHours(minTransitHours);
-                    currentTime += TimeSpan.FromHours(minTransitHours);
-                }
-            }
-
-            return (currentTime, totalTime);
         }
 
         private static decimal GetRandomPrice(int min, int max)

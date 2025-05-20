@@ -17,7 +17,7 @@ namespace SkyRoute.Domains.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -70,12 +70,14 @@ namespace SkyRoute.Domains.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Airline")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AirlineId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("ArrivalTime")
+                    b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("ArrivalTime")
+                        .HasColumnType("time");
 
                     b.Property<TimeSpan>("DepartureTime")
                         .HasColumnType("time");
@@ -83,9 +85,15 @@ namespace SkyRoute.Domains.Migrations
                     b.Property<DateTime>("FlightDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FromCity")
+                    b.Property<string>("FlightNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FlightRouteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FromCityId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("PriceBusiness")
                         .HasColumnType("decimal(18,2)");
@@ -93,11 +101,21 @@ namespace SkyRoute.Domains.Migrations
                     b.Property<decimal>("PriceEconomy")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ToCity")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("SegmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ToCityId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AirlineId");
+
+                    b.HasIndex("FlightRouteId");
+
+                    b.HasIndex("FromCityId");
+
+                    b.HasIndex("ToCityId");
 
                     b.ToTable("Flights");
                 });
@@ -219,6 +237,41 @@ namespace SkyRoute.Domains.Migrations
                     b.HasIndex("FlightId");
 
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("SkyRoute.Domains.Entities.Flight", b =>
+                {
+                    b.HasOne("SkyRoute.Domains.Entities.Airline", "Airline")
+                        .WithMany()
+                        .HasForeignKey("AirlineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkyRoute.Domains.Entities.FlightRoute", "FlightRoute")
+                        .WithMany()
+                        .HasForeignKey("FlightRouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkyRoute.Domains.Entities.City", "FromCity")
+                        .WithMany()
+                        .HasForeignKey("FromCityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SkyRoute.Domains.Entities.City", "ToCity")
+                        .WithMany()
+                        .HasForeignKey("ToCityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Airline");
+
+                    b.Navigation("FlightRoute");
+
+                    b.Navigation("FromCity");
+
+                    b.Navigation("ToCity");
                 });
 
             modelBuilder.Entity("SkyRoute.Domains.Entities.FlightMealOption", b =>

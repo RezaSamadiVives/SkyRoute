@@ -1,10 +1,11 @@
 ﻿using SkyRoute.Domains.Entities;
+using SkyRoute.Repositories.Models;
 
 namespace SkyRoute.Services.Interfaces
 {
     public interface IFlightSearchService : IService<Flight>
     {
-        Task<IEnumerable<Flight>> SearchFlightsAsync(string fromCity, string toCity,
-            DateTime departureDate, DateTime? returnDate, string tripClass, string tripType, int adultCount, int? kidCount);
+        Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId,
+            DateTime departureDate, DateTime? returnDate, bool isBusiness, bool Retou, int adultCount, int? kidCount);
     }
 }
