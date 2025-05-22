@@ -3,8 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SkyRoute.ViewModels
 {
-    public class HomeVM : IValidatableObject
+    public class FlightSearchFormVM : IValidatableObject
     {
+
         public List<SelectListItem>? Cities { get; set; }
 
         [Required(ErrorMessage = "Kies enkel of retour")]
@@ -19,17 +20,17 @@ namespace SkyRoute.ViewModels
         public DateTime? ReturnDate { get; set; }
 
         [Required(ErrorMessage = "Vertrekstad is verplicht")]
-        public string DepartureCity { get; set; }
+        public int DepartureCity { get; set; }
 
         [Required(ErrorMessage = "Bestemming is verplicht")]
-        public string DestinationCity { get; set; }
+        public int DestinationCity { get; set; }
 
         [Required(ErrorMessage = "Reiziger is verplicht")]
         public int AdultPassengers { get; set; }
 
         public int? KidsPassengers { get; set; }
 
-        public bool IsBusiness => this.SelectedTripClass == "Business";
+        public bool IsBusiness => this.SelectedTripClass == "business";
         public bool IsRetour => this.SelectedTripType == "retour";
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -45,5 +46,4 @@ namespace SkyRoute.ViewModels
             }
         }
     }
-
 }

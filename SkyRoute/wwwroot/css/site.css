@@ -193,3 +193,19 @@ input:focus, select:focus {
 .loading button span {
     display: none;
 }
+
+.card-title {
+    color: #0079CF;
+    font-weight: bold;
+}
+
+.card-body {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.list-group-item {
+    background-color: #f1f8ff;
+    border: none;
+}

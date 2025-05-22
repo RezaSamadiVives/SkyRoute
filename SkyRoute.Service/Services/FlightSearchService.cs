@@ -1,6 +1,6 @@
 ﻿using SkyRoute.Domains.Entities;
+using SkyRoute.Domains.Models;
 using SkyRoute.Repositories.Interfaces;
-using SkyRoute.Repositories.Models;
 using SkyRoute.Services.Interfaces;
 
 namespace SkyRoute.Services.Services
@@ -10,9 +10,9 @@ namespace SkyRoute.Services.Services
         private readonly IFlightSearchDAO _flightSearchDAO = flightSearchDAO;
 
         public async Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId, DateTime departureDate, 
-            DateTime? returnDate, bool isBusiness, bool Retour, int adultCount, int? kidCount)
+            DateTime? returnDate, bool isBusiness, bool isRetour, int adultCount, int? kidCount)
         {
-            return await _flightSearchDAO.SearchFlightsAsync(fromCityId, toCityId, departureDate, returnDate, isBusiness, Retour, adultCount, kidCount);
+            return await _flightSearchDAO.SearchFlightsAsync(fromCityId, toCityId, departureDate, returnDate, isBusiness, isRetour, adultCount, kidCount);
         }
     }
 }

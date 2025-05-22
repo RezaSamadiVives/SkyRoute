@@ -1,0 +1,125 @@
+﻿@model SkyRoute.ViewModels.FlightSearchFormVM
+@{
+    var controller = ViewData["FormController"]?.ToString() ?? "Home";
+    var action = ViewData["FormAction"]?.ToString() ?? "Index";
+
+    string returnDateValue = Model.ReturnDate.HasValue
+      ? Model.ReturnDate.Value.ToString("yyyy-MM-dd")
+      : "";
+}
+
+
+<div class="booking-form bg-white text-dark p-4 rounded shadow-lg mx-auto animate-fade-in delay-2" style="max-width: 850px;">
+    <form asp-controller="@controller" asp-action="@action" method="post">
+        <partial name="_ValidationScriptsPartial" />
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+
+        <!-- Enkel/Retour keuze -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="SelectedTripType" id="enkel" value="enkel" onchange="toggleReturnDate()" />
+                    <label class="form-check-label" for="enkel">
+                        <i class="bi bi-arrow-right-circle"></i> Enkele reis
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="SelectedTripType" id="retour" value="retour" onchange="toggleReturnDate()" />
+                    <label class="form-check-label" for="retour">
+                        <i class="bi bi-arrow-repeat"></i> Retour
+                    </label>
+                </div>
+            </div>
+            <!-- Economy / Business -->
+            <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="SelectedTripClass" id="business" value="business" />
+                    <label class="form-check-label" for="business">
+                        <i class="bi bi-briefcase-fill"></i> Business
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="SelectedTripClass" id="economy" value="economy" />
+                    <label class="form-check-label" for="economy">
+                        <i class="bi bi-cash-coin"></i> Economy
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Vertrek, Bestemming, Data -->
+        <div class="row g-3">
+            <!-- Vertrekstad -->
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-airplane-engines"></i></span>
+                    <select asp-for="DepartureCity" class="form-select" asp-items="Model.Cities" id="fromCity" onchange="updateDestinationOptions()">
+                        <option value="">Vertrekstad</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bestemming -->
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                    <select asp-for="DestinationCity" class="form-select" asp-items="Model.Cities" id="toCity">
+                        <option value="">Bestemming</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Vertrekdatum -->
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                    <input asp-for="DepartureDate" type="date" class="form-control" />
+                </div>
+            </div>
+
+            <!-- Retourdatum -->
+            <div class="col-md-3" id="returnDateContainer" style="display: none;">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                    <input asp-for="ReturnDate" type="date" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Passagiers -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label asp-for="AdultPassengers" class="form-label">Aantal Volwassenen</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <input asp-for="AdultPassengers" type="number" class="form-control" min="1" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="KidsPassengers" class="form-label">Aantal Kinderen</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+                    <input asp-for="KidsPassengers" type="number" class="form-control" min="0" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="mt-4" id="submitContainer">
+            <button type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center">
+                <span>Zoek jouw vlucht</span>
+                <div class="spinner-border spinner-border-sm text-light loading-spinner" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </button>
+        </div>
+    </form>
+   
+</div>
+
+
+
+
+

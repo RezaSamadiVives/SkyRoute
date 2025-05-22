@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SkyRoute.Domains.Entities;
-using System;
 
 namespace SkyRoute.Domains.Data
 {
     public static class SeedHelper
     {
         private static readonly Random _random = new();
+
         public static async Task SeedRoutesAsync(SkyRouteDbContext context)
         {
             if (context.FlightRoutes.Any()) return;
@@ -15,68 +15,114 @@ namespace SkyRoute.Domains.Data
 
             var cities = cityNames.Select(name => new City { Name = name }).ToList();
 
-            context.Cities.AddRange(cities);
-            await context.SaveChangesAsync();
+            if(!context.Cities.Any())
+            {
+                context.Cities.AddRange(cities);
+                await context.SaveChangesAsync();
+            }
+
 
             var cityDict = cities.ToDictionary(c => c.Name, c => c.Id);
 
+            // Hardcoded alle 42 routes (heen + terug = 42) met stopovers
             var stopoverMap = new Dictionary<(string From, string To), List<string>>
-        {
-            { ("New York", "Tokio"), new List<string> { "Londen", "Dubai" } },
-            { ("New York", "Sydney"), new List<string> { "Londen", "Dubai" } },
-            { ("New York", "Singapore"), new List<string> { "Londen", "Dubai" } },
-            { ("New York", "Kaapstad"), new List<string> { "Londen", "Dubai" } },
-            { ("Londen", "Tokio"), new List<string> { "Dubai" } },
-            { ("Londen", "Sydney"), new List<string> { "Dubai" } },
-            { ("Londen", "Kaapstad"), new List<string> { "Dubai" } },
-            { ("Tokio", "Sydney"), new List<string> { "Dubai" } },
-            { ("Tokio", "Kaapstad"), new List<string> { "Dubai" } },
+    {
+                // New York routes
+                { ("New York", "Londen"), new() },
+                { ("Londen", "New York"), new() },
 
-            // Geen overstap
-            { ("New York", "Londen"), new List<string>() },
-            { ("Londen", "Singapore"), new List<string>() },
-            { ("Tokio", "Singapore"), new List<string>() },
-            { ("Sydney", "Singapore"), new List<string>() }
-        };
+                { ("New York", "Tokio"), new() { "Londen", "Dubai" } },
+                { ("Tokio", "New York"), new() { "Dubai", "Londen" } },
+
+                { ("New York", "Dubai"), new() },
+                { ("Dubai", "New York"), new() },
+
+                { ("New York", "Sydney"), new() { "Londen", "Dubai" } },
+                { ("Sydney", "New York"), new() { "Dubai", "Londen" } },
+
+                { ("New York", "Kaapstad"), new() { "Londen", "Dubai" } },
+                { ("Kaapstad", "New York"), new() { "Dubai", "Londen" } },
+
+                { ("New York", "Singapore"), new() { "Londen", "Dubai" } },
+                { ("Singapore", "New York"), new() { "Dubai", "Londen" } },
+
+                // Londen routes
+                { ("Londen", "Tokio"), new() { "Dubai" } },
+                { ("Tokio", "Londen"), new() { "Dubai" } },
+
+                { ("Londen", "Dubai"), new() },
+                { ("Dubai", "Londen"), new() },
+
+                { ("Londen", "Sydney"), new() { "Dubai" } },
+                { ("Sydney", "Londen"), new() { "Dubai" } },
+
+                { ("Londen", "Kaapstad"), new() { "Dubai" } },
+                { ("Kaapstad", "Londen"), new() { "Dubai" } },
+
+                { ("Londen", "Singapore"), new() },
+                { ("Singapore", "Londen"), new() },
+
+                // Tokio routes
+                { ("Tokio", "Dubai"), new() },
+                { ("Dubai", "Tokio"), new() },
+
+                { ("Tokio", "Sydney"), new() { "Dubai" } },
+                { ("Sydney", "Tokio"), new() { "Dubai" } },
+
+                { ("Tokio", "Kaapstad"), new() { "Dubai" } },
+                { ("Kaapstad", "Tokio"), new() { "Dubai" } },
+
+                { ("Tokio", "Singapore"), new() },
+                { ("Singapore", "Tokio"), new() },
+
+                // Dubai routes
+                { ("Dubai", "Sydney"), new() },
+                { ("Sydney", "Dubai"), new() },
+
+                { ("Dubai", "Kaapstad"), new() },
+                { ("Kaapstad", "Dubai"), new() },
+
+                { ("Dubai", "Singapore"), new() },
+                { ("Singapore", "Dubai"), new() },
+
+                // Sydney routes
+                { ("Sydney", "Kaapstad"), new() { "Dubai" } },
+                { ("Kaapstad", "Sydney"), new() { "Dubai" } },
+
+                { ("Sydney", "Singapore"), new() },
+                { ("Singapore", "Sydney"), new() },
+
+                // Kaapstad routes
+                { ("Kaapstad", "Singapore"), new() },
+                { ("Singapore", "Kaapstad"), new() },
+            };
 
             var allRoutes = new List<FlightRoute>();
 
-            foreach (var from in cityNames)
+            foreach (var kvp in stopoverMap)
             {
-                foreach (var to in cityNames)
+                var (from, to) = kvp.Key;
+                var stopovers = kvp.Value;
+
+                var route = new FlightRoute
                 {
-                    if (from == to) continue;
-
-                    var forwardKey = (from, to);
-                    var reverseKey = (to, from);
-
-                    foreach (var key in new[] { forwardKey, reverseKey })
+                    FromCityId = cityDict[from],
+                    ToCityId = cityDict[to],
+                    HasStopOver = stopovers.Count > 0,
+                    Stopovers = stopovers.Select((cityName, index) => new RouteStopover
                     {
-                        if (allRoutes.Any(r => r.FromCityId == cityDict[key.Item1] && r.ToCityId == cityDict[key.Item2]))
-                            continue;
+                        StopoverCityId = cityDict[cityName],
+                        Order = index
+                    }).ToList()
+                };
 
-                        var route = new FlightRoute
-                        {
-                            FromCityId = cityDict[key.Item1],
-                            ToCityId = cityDict[key.Item2],
-                            HasStopOver = stopoverMap.TryGetValue(key, out var stops) && stops.Count > 0,
-                            Stopovers = stopoverMap.TryGetValue(key, out var stopovers)
-                                ? stopovers.Select((s, i) => new RouteStopover
-                                {
-                                    StopoverCityId = cityDict[s],
-                                    Order = i
-                                }).ToList()
-                                : new List<RouteStopover>()
-                        };
-
-                        allRoutes.Add(route);
-                    }
-                }
+                allRoutes.Add(route);
             }
 
             context.FlightRoutes.AddRange(allRoutes);
             await context.SaveChangesAsync();
         }
+
 
         public static async Task SeedAirlinesAsync(SkyRouteDbContext context)
         {
@@ -131,132 +177,12 @@ namespace SkyRoute.Domains.Data
             await context.SaveChangesAsync();
         }
 
-        //public static async Task SeedFlights(SkyRouteDbContext context)
-        //{
-        //    if (context.Flights.Any()) return;
-
-        //    var startDate = DateTime.Today.AddDays(3);
-        //    var endDate = DateTime.Today.AddMonths(7);
-
-        //    var airlines = context.Airlines.ToList();
-        //    var routes = context.FlightRoutes
-        //        .Include(r => r.FromCity)
-        //        .Include(r => r.ToCity)
-        //        .Include(r => r.Stopovers)
-        //        .ThenInclude(s => s.StopoverCity)
-        //        .ToList();
-
-        //    var allMeals = context.MealOptions.ToList();
-
-        //    foreach (var route in routes)
-        //    {
-        //        for (var date = startDate; date <= endDate; date = date.AddDays(1))
-        //        {
-        //            var shuffledAirlines = airlines.OrderBy(_ => _random.Next()).ToList();
-
-        //            for (int i = 0; i < 3; i++)
-        //            {
-        //                var airline = shuffledAirlines[i];
-        //                var departureTime = TimeSpan.FromHours(6 + i * 4);
-        //                var departureDateTime = date.Date + departureTime;
-        //                var currentTime = departureDateTime;
-
-        //                var stopsOrdered = route.Stopovers.OrderBy(s => s.Order).ToList();
-        //                var cities = new List<string> { route.FromCity.Name };
-        //                cities.AddRange(stopsOrdered.Select(s => s.StopoverCity.Name));
-        //                cities.Add(route.ToCity.Name);
-
-        //                // Seizoensgebonden prijsverhoging
-        //                decimal priceMultiplier = 1m;
-        //                if ((route.FromCity.Name == "Londen" || route.ToCity.Name == "Londen" ||
-        //                     route.FromCity.Name == "New York" || route.ToCity.Name == "New York") && date.Month == 11)
-        //                {
-        //                    priceMultiplier = 1.3m;
-        //                }
-        //                else if ((route.FromCity.Name == "Tokio" || route.ToCity.Name == "Tokio" ||
-        //                          route.FromCity.Name == "Singapore" || route.ToCity.Name == "Singapore" ||
-        //                          route.FromCity.Name == "Dubai" || route.ToCity.Name == "Dubai") &&
-        //                         (date.Month == 7 || date.Month == 8))
-        //                {
-        //                    priceMultiplier = 1.3m;
-        //                }
-
-        //                for (int j = 0; j < cities.Count - 1; j++)
-        //                {
-        //                    var from = cities[j];
-        //                    var to = cities[j + 1];
-        //                    var flightDuration = TimeSpan.FromHours(_random.Next(6, 10));
-        //                    var arrivalTime = currentTime + flightDuration;
-
-        //                    var flight = new Flight
-        //                    {
-        //                        FromCity = from,
-        //                        ToCity = to,
-        //                        Airline = airline.Name,
-        //                        FlightDate = date,
-        //                        DepartureTime = currentTime.TimeOfDay,
-        //                        ArrivalTime = arrivalTime,
-        //                        PriceEconomy = GetRandomPrice(200, 800) * priceMultiplier,
-        //                        PriceBusiness = GetRandomPrice(800, 1600) * priceMultiplier,
-        //                        Seats = new List<Seat>(),
-        //                        MealOptions = new List<FlightMealOption>()
-        //                    };
-
-        //                    var seats = GenerateSeats(flight);
-        //                    foreach (var seat in seats)
-        //                    {
-        //                        seat.Flight = flight;
-        //                        flight.Seats.Add(seat);
-        //                    } 
-
-        //                    context.Flights.Add(flight);
-        //                    await context.SaveChangesAsync();
-
-
-
-        //                    foreach (var meal in allMeals)
-        //                    {
-        //                        if (!meal.IsLocalMeal)
-        //                        {
-        //                            context.FlightMealOptions.Add(new FlightMealOption
-        //                            {
-        //                                Flight = flight,
-        //                                MealOption = meal,
-        //                            });
-        //                        }
-        //                    }
-
-        //                    var localMeal = allMeals.FirstOrDefault(x =>
-        //                        x.Name.ToLower().Contains(to.ToLower()) && x.IsLocalMeal);
-        //                    if (localMeal != null)
-        //                    {
-        //                        context.FlightMealOptions.Add(new FlightMealOption
-        //                        {
-        //                            Flight = flight,
-        //                            MealOption = localMeal,
-        //                        });
-        //                    }
-
-        //                    await context.SaveChangesAsync();
-
-        //                    // Overstaptijd van 2 uur (behalve laatste segment)
-        //                    if (j < cities.Count - 2)
-        //                    {
-        //                        currentTime = arrivalTime + TimeSpan.FromHours(2);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-
         public static async Task SeedFlights(SkyRouteDbContext context)
         {
             if (context.Flights.Any()) return;
 
             var startDate = DateTime.Today.AddDays(3);
-            var endDate = DateTime.Today.AddMonths(3);
+            var endDate = DateTime.Today.AddMonths(2);
 
             var airlines = await context.Airlines.ToListAsync();
             var routes = await context.FlightRoutes
@@ -319,8 +245,6 @@ namespace SkyRoute.Domains.Data
                             flight.MealOptions = meals;
 
                             flightsToAdd.Add(flight);
-                            //context.Flights.Add(flight);
-                            //await context.SaveChangesAsync();
 
                             if (j < cities.Count - 2)
                             {

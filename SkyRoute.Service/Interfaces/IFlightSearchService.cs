@@ -1,5 +1,5 @@
 ﻿using SkyRoute.Domains.Entities;
-using SkyRoute.Repositories.Models;
+using SkyRoute.Domains.Models;
 
 namespace SkyRoute.Services.Interfaces
 {

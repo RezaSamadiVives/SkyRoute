@@ -1,6 +1,6 @@
 ﻿using SkyRoute.Domains.Entities;
 
-namespace SkyRoute.Repositories.Models
+namespace SkyRoute.Domains.Models
 {
     public class FlightSegmentGroup
     {
