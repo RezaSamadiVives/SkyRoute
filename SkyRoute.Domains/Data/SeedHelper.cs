@@ -143,7 +143,7 @@ namespace SkyRoute.Domains.Data
                 new() {
                     Name = "Singapore Airlines",
                     Description = "Singapore Airlines is de nationale luchtvaartmaatschappij van Singapore en staat wereldwijd bekend om haar uitstekende service en innovatieve benadering van luchtvaart. Met een moderne vloot van voornamelijk wide-body vliegtuigen bedient de maatschappij een wereldwijd netwerk van bestemmingen. Het iconische 'Singapore Girl'-imago symboliseert de toewijding aan klanttevredenheid en Aziatische gastvrijheid.",
-                    LogoUrl = "/images/airlines/singapore.png"
+                    LogoUrl = "/images/airlines/singapore.jpg"
                 }
             };
 
