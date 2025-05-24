@@ -205,6 +205,16 @@ input:focus, select:focus {
     padding: 1.5rem;
 }
 
+    .card-body:hover {
+        background-color: #CCE4F5;
+        border-radius: 0;
+        padding: 1.5rem;
+    }
+    .card-body.selected {
+        background-color: #FEBE12;
+        border-radius: 0;
+        padding: 1.5rem;
+    }
 .list-group-item {
     background-color: #f1f8ff;
     border: none;

@@ -15,7 +15,7 @@ namespace SkyRoute.ViewModels
         public string SelectedTripClass { get; set; }
 
         [Required(ErrorMessage = "Kies jouw vertrekdatum")]
-        public DateTime DepartureDate { get; set; }
+        public DateTime DepartureDate { get; set; } = DateTime.Today.AddDays(3);
 
         public DateTime? ReturnDate { get; set; }
 

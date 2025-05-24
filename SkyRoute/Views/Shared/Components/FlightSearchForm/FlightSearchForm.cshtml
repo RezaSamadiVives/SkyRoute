@@ -3,9 +3,6 @@
     var controller = ViewData["FormController"]?.ToString() ?? "Home";
     var action = ViewData["FormAction"]?.ToString() ?? "Index";
 
-    string returnDateValue = Model.ReturnDate.HasValue
-      ? Model.ReturnDate.Value.ToString("yyyy-MM-dd")
-      : "";
 }
 
 
@@ -75,15 +72,15 @@
             <div class="col-md-3">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-                    <input asp-for="DepartureDate" type="date" class="form-control" />
+                    <input asp-for="DepartureDate" type="date" class="form-control" value="@(Model.DepartureDate.ToString("yyyy-MM-dd"))" />
                 </div>
             </div>
 
             <!-- Retourdatum -->
             <div class="col-md-3" id="returnDateContainer" style="display: none;">
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
-                    <input asp-for="ReturnDate" type="date" class="form-control" />
+                    <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                    <input asp-for="ReturnDate" type="date" class="form-control" value="@(Model.ReturnDate?.ToString("yyyy-MM-dd"))" />
                 </div>
             </div>
         </div>

@@ -19,13 +19,13 @@ namespace SkyRoute.ViewComponents
         {
             var vm = model as FlightSearchFormVM ?? new FlightSearchFormVM();
             await PopulateCities(vm);
-            if (vm.DepartureDate == default)
-            {
-                vm.DepartureDate = DateTime.Now.AddDays(3);
-            }
+            //if (vm.DepartureDate == default)
+            //{
+            //    vm.DepartureDate = DateTime.Now.AddDays(3);
+            //}
             if(vm.ReturnDate.HasValue)
             {
-                vm.ReturnDate = vm.ReturnDate.Value;
+                vm.ReturnDate = vm.ReturnDate;
             }
 
             ViewData["FormController"] = formController;
