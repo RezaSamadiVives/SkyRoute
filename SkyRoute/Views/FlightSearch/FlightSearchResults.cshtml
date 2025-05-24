@@ -39,7 +39,9 @@
                                     <div>
                                         <input class="form-check-input" readonly type="checkbox" data-flight-type="outbound" id="check_@segment.SegmentId" name="check" disabled />
                                     </div>
-                                    <button class="btn btn-outline-primary" data-flight-type="outbound" onclick="selectFlight('@segment.SegmentId')">Selecteer vlucht</button>
+                                    <button class="btn btn-outline-primary select-flight-btn" data-flight-type="outbound" data-segment-id="@segment.SegmentId">Selecteer vlucht</button>
+
+
 
                                 </div>
                              
@@ -118,7 +120,8 @@
                                     <div>
                                         <input class="form-check-input" type="checkbox" data-flight-type="return" id="check_@segment.SegmentId" name="check" disabled />
                                     </div>
-                                    <button class="btn btn-outline-primary" data-flight-type="return" onclick="selectReturnFlight('@segment.SegmentId')">Selecteer terugvlucht</button>
+                                    <button class="btn btn-outline-primary select-flight-btn" data-flight-type="return" data-segment-id="@segment.SegmentId">Selecteer terugvlucht</button>
+
 
                                 </div>
                                
@@ -163,6 +166,13 @@
                 }
             </div>
         }
+
+        <div class="mt-4">
+            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Book", "FlightBooking")">
+                Vlucht boeken
+            </a>
+        </div>
+
     </div>
     @section Scripts {
         <script src="~/js/flightSearchForm.js"></script>
