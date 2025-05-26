@@ -15,14 +15,10 @@ namespace SkyRoute.ViewComponents
             _cityService = cityService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string formController = "Home", string formAction = "Index", object model = null)
+        public async Task<IViewComponentResult> InvokeAsync(string formController = "Home", string formAction = "Index", object? model = null)
         {
             var vm = model as FlightSearchFormVM ?? new FlightSearchFormVM();
             await PopulateCities(vm);
-            //if (vm.DepartureDate == default)
-            //{
-            //    vm.DepartureDate = DateTime.Now.AddDays(3);
-            //}
             if(vm.ReturnDate.HasValue)
             {
                 vm.ReturnDate = vm.ReturnDate;

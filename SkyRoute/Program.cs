@@ -41,6 +41,13 @@ builder.Services.AddControllersWithViews();
 // Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "be.VIVES.Session";
+
+    options.IdleTimeout = TimeSpan.FromMinutes(1);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -59,6 +66,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 

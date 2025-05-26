@@ -9,6 +9,11 @@ namespace SkyRoute.Services.Services
     {
         private readonly IFlightSearchDAO _flightSearchDAO = flightSearchDAO;
 
+        public async Task<FlightSegmentGroup> GetAvailableFlights(Guid segmentId, bool isBusiness, int adultCount, int? kidCount)
+        {
+            return await _flightSearchDAO.GetAvailableFlights(segmentId, isBusiness, adultCount, kidCount);
+        }
+
         public async Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId, DateTime departureDate, 
             DateTime? returnDate, bool isBusiness, bool isRetour, int adultCount, int? kidCount)
         {

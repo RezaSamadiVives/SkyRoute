@@ -278,7 +278,7 @@ namespace SkyRoute.Domains.Data
                 ((route.FromCity.Name is "Londen" or "New York") && date.Month == 11 ||
                  (route.FromCity.Name is "Tokio" or "Singapore" or "Dubai") && (date.Month == 7 || date.Month == 8)))
             {
-                return 1.3m;
+                return 1.3m;// uit database lezen dus zet deze settings in db tabel vacations of zo
             }
 
             return 1m;

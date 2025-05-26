@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SkyRoute.Helpers;
 using System.ComponentModel.DataAnnotations;
 
 namespace SkyRoute.ViewModels
@@ -9,10 +10,10 @@ namespace SkyRoute.ViewModels
         public List<SelectListItem>? Cities { get; set; }
 
         [Required(ErrorMessage = "Kies enkel of retour")]
-        public string SelectedTripType { get; set; }
+        public TripType SelectedTripType { get; set; }
 
         [Required(ErrorMessage = "Kies economy of business")]
-        public string SelectedTripClass { get; set; }
+        public TripClass SelectedTripClass { get; set; }
 
         [Required(ErrorMessage = "Kies jouw vertrekdatum")]
         public DateTime DepartureDate { get; set; } = DateTime.Today.AddDays(3);
@@ -30,12 +31,12 @@ namespace SkyRoute.ViewModels
 
         public int? KidsPassengers { get; set; }
 
-        public bool IsBusiness => this.SelectedTripClass == "business";
-        public bool IsRetour => this.SelectedTripType == "retour";
+        public bool IsBusiness => SelectedTripClass == TripClass.Business;
+        public bool IsRetour => SelectedTripType == TripType.Retour;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (SelectedTripType == "retour" && ReturnDate == null)
+            if (SelectedTripType == TripType.Retour && ReturnDate == null)
             {
                 yield return new ValidationResult("Retourdatum is verplicht bij een retourreis.", new[] { nameof(ReturnDate) });
             }

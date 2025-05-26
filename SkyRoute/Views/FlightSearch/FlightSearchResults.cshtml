@@ -5,6 +5,15 @@
 }
 
 <main>
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="AdultCount" value="@Model.FormModel?.AdultPassengers" />
+    <input type="hidden" id="KidsCount" value="@(Model.FormModel?.KidsPassengers ?? 0)" />
+    <input type="hidden" name="SelectedTripClass" value="@Model.FormModel?.SelectedTripClass" />
+    <input type="hidden" name="SelectedTripType" value="@Model.FormModel?.SelectedTripType" />
+    <input type="hidden" name="IsRetour" value="@(Model.FormModel?.IsRetour.ToString().ToLower())" />
+
+
+
     <div class="container py-5">
 
         @await Component.InvokeAsync("FlightSearchForm", new
@@ -68,7 +77,7 @@
                                                     Klasse: <strong class="card-title">@Model.FormModel?.SelectedTripClass</strong>
                                                     <br />
                                                     Prijs: <strong class="card-title">
-                                                        @if (Model.FormModel?.SelectedTripClass == "business")
+                                                        @if (Model.FormModel?.SelectedTripClass == SkyRoute.Helpers.TripClass.Business)
                                                         {
                                                             @:€ @flight.PriceBusiness
                                                         }
@@ -145,7 +154,7 @@
                                                     Klasse: <strong class="card-title">@Model.FormModel?.SelectedTripClass</strong>
                                                     <br />
                                                     Prijs: <strong class="card-title">
-                                                        @if (Model.FormModel?.SelectedTripClass == "business")
+                                                        @if (Model.FormModel?.SelectedTripClass == SkyRoute.Helpers.TripClass.Business)
                                                         {
                                                             @:€ @flight.PriceBusiness
                                                         }
@@ -168,8 +177,8 @@
         }
 
         <div class="mt-4">
-            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Book", "FlightBooking")">
-                Vlucht boeken
+            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Index", "Passengers")">
+                Verder met boeken
             </a>
         </div>
 
