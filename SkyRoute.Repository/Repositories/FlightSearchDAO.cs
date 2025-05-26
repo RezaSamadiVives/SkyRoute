@@ -105,62 +105,6 @@ namespace SkyRoute.Repositories.Repositories
                 .ToList();
         }
 
-        //public async Task<IEnumerable<FlightSegmentGroup>> GetFlightsForRoute(
-        //        int fromCityId,
-        //        int toCityId,
-        //        DateTime departureDate,
-        //        bool isBusiness,
-        //        int passengersCount)
-        //{
-        //    var flightRoute = await _context.FlightRoutes
-        //        .FirstOrDefaultAsync(r => r.FromCityId == fromCityId && r.ToCityId == toCityId);
-
-        //    if (flightRoute == null)
-        //        return Enumerable.Empty<FlightSegmentGroup>();
-
-        //    int requiredFlightCount = await _context.RouteStops
-        //        .Where(s => s.RouteId == flightRoute.Id)
-        //        .CountAsync() + 1;
-
-        //    var startDate = departureDate.Date;
-
-        //    var allFlights = await _context.Flights
-        //        .Where(f =>
-        //            f.FlightRouteId == flightRoute.Id &&
-        //            f.FlightDate >= startDate)
-        //             .Include(f => f.Airline)
-        //             .Include(f => f.FromCity)
-        //             .Include(f => f.ToCity)
-        //             .Include(f => f.FlightRoute)
-        //             .Include(f => f.Seats)
-        //             .Include(f => f.MealOptions)
-        //             .ToListAsync();
-
-        //    var result = allFlights
-        //        .GroupBy(f => f.SegmentId)
-        //        .Where(g =>g.Count() == requiredFlightCount &&
-        //        g.All(f => f.Seats.Count(s => s.IsAvailable && s.IsBusiness == isBusiness) >= passengersCount))
-        //        .OrderBy(g => g.Min(f => f.FlightDate)).Take(3)
-        //        .Select(g =>
-        //        {
-        //            var ordered = g.OrderBy(f => f.FlightDate).ThenBy(f => f.DepartureTime).ToList();
-
-        //            return new FlightSegmentGroup
-        //            {
-        //                SegmentId = g.Key,
-        //                Flights = ordered,
-        //                TotalPrice = isBusiness
-        //                    ? ordered.Sum(f => f.PriceBusiness)
-        //                    : ordered.Sum(f => f.PriceEconomy)
-        //            };
-        //        })
-        //        .ToList();
-
-        //    return result;
-        //}
-
-
-
         public async Task<FlightSegmentGroup> GetAvailableFlights(Guid segmentId, bool isBusiness, int adultCount, int? kidCount)
         {
             int passengersCount = adultCount + (kidCount ?? 0);
