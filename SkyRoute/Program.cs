@@ -64,7 +64,20 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (InvalidOperationException ex) when (ex.Message.Contains("The view"))
+    {
+
+        context.Response.Redirect("/Error/NotFound");
+    }
+});
 app.UseRouting();
 
 app.UseSession();

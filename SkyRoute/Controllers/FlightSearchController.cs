@@ -13,6 +13,8 @@ namespace SkyRoute.Controllers
         private readonly IFlightSearchService _flightSearchService = flightSearchService;
         private readonly IMapper _mapper = mapper;
 
+        
+        [HttpGet]
         public async Task<IActionResult> FlightSearchResults(int fromCityId, int toCityId,
             DateTime departureDate, DateTime? returnDate, bool isRetour, bool isBusiness, int adultPassengers, int? kidsPassengers)
         {

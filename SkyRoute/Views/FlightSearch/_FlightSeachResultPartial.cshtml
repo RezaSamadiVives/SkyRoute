@@ -1,0 +1,67 @@
+﻿@model SkyRoute.ViewModels.FlightSegmentGroupVM
+
+@{
+    var tripType = ViewData["TripType"]?.ToString(); // "outbound" of "return"
+    var selectedTripClass = ViewData["SelectedTripClass"]?.ToString(); // economy / business
+}
+
+<div class="col-12">
+    <div class="card shadow-sm animate-fade-in @(tripType == "return" ? "delay-1" : "")">
+        <div class="card-body" data-flight-type="@tripType" data-segment-id="@Model.SegmentId">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-1">
+                        @Model.Flights.First().FromCity.Name → @Model.Flights.Last().ToCity.Name
+                    </h5>
+                    <p class="card-text text-muted mb-0">
+                        Totale duur: <strong class="card-title">@Model.TotalDuration.Days d @Model.TotalDuration.Hours u @Model.TotalDuration.Minutes min</strong>
+                        | Prijs: <strong class="card-title">€@Model.TotalPrice</strong>
+                    </p>
+                    <p class="card-text text-muted mb-0">
+                        Vertrekdatum: <strong class="card-title">@Model.Flights.First().FlightDate.ToString("M") @Model.Flights.First().DepartureTime</strong>
+                        | Aankomstdatum: <strong class="card-title">@Model.Flights.Last().ArrivalDate.ToString("M") @Model.Flights.Last().ArrivalTime</strong>
+                    </p>
+                </div>
+                <div>
+                    <input class="form-check-input" type="checkbox" data-flight-type="@tripType" id="check_@Model.SegmentId" name="check" disabled />
+                </div>
+                <button class="btn btn-outline-primary select-flight-btn" data-flight-type="@tripType" data-segment-id="@Model.SegmentId">
+                    Selecteer @(tripType == "return" ? "terugvlucht" : "vlucht")
+                </button>
+            </div>
+
+            <button class="btn btn-link text-decoration-none mt-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#segmentDetails-@tripType-@Model.SegmentId">
+                Details tonen
+            </button>
+
+            <div class="collapse mt-3" id="segmentDetails-@tripType-@Model.SegmentId">
+                @foreach (var flight in Model.Flights)
+                {
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong class="card-title">@flight.FlightNumber</strong> – @flight.Airline.Name<br />
+                                <strong>@flight.FromCity.Name</strong> (@flight.DepartureTime) →
+                                <strong>@flight.ToCity.Name</strong> (@flight.ArrivalTime)
+                            </div>
+                            <div class="text-end">
+                                Datum: <strong class="card-title">@flight.FlightDate.ToShortDateString()</strong><br />
+                                Klasse: <strong class="card-title">@selectedTripClass</strong><br />
+                                Prijs: <strong class="card-title">
+                                    @if (selectedTripClass == "business")
+                                    {
+                                        @:€ @flight.PriceBusiness
+                                    }
+                                    else
+                                    {
+                                        @:€ @flight.PriceEconomy
+                                    }
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

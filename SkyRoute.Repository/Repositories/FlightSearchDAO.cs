@@ -98,8 +98,8 @@ namespace SkyRoute.Repositories.Repositories
                         SegmentId = g.Key,
                         Flights = ordered,
                         TotalPrice = isBusiness
-                            ? ordered.Sum(f => f.PriceBusiness)
-                            : ordered.Sum(f => f.PriceEconomy)
+                            ? ordered.Sum(f => f.PriceBusiness) * passengersCount
+                            : ordered.Sum(f => f.PriceEconomy) * passengersCount
                     };
                 })
                 .ToList();
