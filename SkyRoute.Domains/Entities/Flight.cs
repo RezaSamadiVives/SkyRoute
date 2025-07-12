@@ -32,7 +32,7 @@
         {
             get; set;
         } = null!;
-        public virtual ICollection<Seat> Seats { get; set; } = new List<Seat>();
-        public virtual ICollection<FlightMealOption> MealOptions { get; set; } = new List<FlightMealOption>();
+        public virtual ICollection<Seat> Seats { get; set; } = [];
+        public virtual ICollection<FlightMealOption> MealOptions { get; set; } = [];
     }
 }
