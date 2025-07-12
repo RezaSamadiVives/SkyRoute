@@ -104,7 +104,7 @@ namespace SkyRoute.Controllers
                     shoppingCartVM.OutboundFlights = new FlightSegmentSessionVM()
                     {
                         SegmentId = selection.SegmentId,
-                        Flights = flightSegmentGroup.Flights.Select(f => f.Id).ToList(),
+                        Flights = [.. flightSegmentGroup.Flights.Select(f => f.Id)],
                         TotalDuration = flightSegmentGroup.TotalDuration,
                         TotalPrice = selection.IsBusiness ? flightSegmentGroup.Flights.Sum(f => f.PriceBusiness)
                         : flightSegmentGroup.Flights.Sum(f => f.PriceEconomy)
@@ -116,7 +116,7 @@ namespace SkyRoute.Controllers
                     shoppingCartVM.RetourFlights = new FlightSegmentSessionVM()
                     {
                         SegmentId = selection.SegmentId,
-                        Flights = flightSegmentGroup.Flights.Select(f => f.Id).ToList(),
+                        Flights = [.. flightSegmentGroup.Flights.Select(f => f.Id)],
                         TotalDuration = flightSegmentGroup.TotalDuration,
                         TotalPrice = selection.IsBusiness ? flightSegmentGroup.Flights.Sum(f => f.PriceBusiness)
                         : flightSegmentGroup.Flights.Sum(f => f.PriceEconomy)
