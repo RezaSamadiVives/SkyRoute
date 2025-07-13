@@ -1,0 +1,59 @@
+@model SkyRoute.ViewModels.PassengerVM
+
+<div class="booking-form bg-white text-dark p-4 rounded shadow-lg mx-auto mb-4 animate-fade-in" style="max-width: 850px;">
+    <h5 class="mb-4"><i class="bi bi-person-badge"></i> Passagier gegevens</h5>
+    
+    <div class="row g-3">
+        <!-- Voornaam -->
+        <div class="col-md-4">
+            <label asp-for="FirstName" class="form-label">Voornaam</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input asp-for="FirstName" class="form-control" />
+            </div>
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <!-- Tussenvoegsel -->
+        <div class="col-md-4">
+            <label asp-for="MiddelName" class="form-label">Tussenvoegsel</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-three-dots"></i></span>
+                <input asp-for="MiddelName" class="form-control" />
+            </div>
+            <span asp-validation-for="MiddelName" class="text-danger"></span>
+        </div>
+
+        <!-- Achternaam -->
+        <div class="col-md-4">
+            <label asp-for="LastName" class="form-label">Achternaam</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                <input asp-for="LastName" class="form-control" />
+            </div>
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+        <!-- Geboortedatum -->
+        <div class="col-md-6">
+            <label asp-for="Birthday" class="form-label">Geboortedatum</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-heart"></i></span>
+                <input asp-for="Birthday" class="form-control" type="date" value="" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            <span asp-validation-for="Birthday" class="text-danger"></span>
+        </div>
+
+        <!-- Checkbox: meereizend -->
+        <div class="col-md-6 d-flex align-items-center">
+            <div class="form-check mt-4">
+                <input asp-for="IsFellowPassenger" class="form-check-input" type="checkbox" />
+                <label asp-for="IsFellowPassenger" class="form-check-label">
+                    <i class="bi bi-people"></i> Meereizende passagier
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

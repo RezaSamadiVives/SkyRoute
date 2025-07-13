@@ -7,7 +7,8 @@ namespace SkyRoute.AutoMapper
 {
     public class AutoMapperProfile : Profile
     {
-        public AutoMapperProfile() {
+        public AutoMapperProfile()
+        {
 
             CreateMap<Airline, AirlineVM>();
             CreateMap<City, CityVM>();
@@ -19,6 +20,7 @@ namespace SkyRoute.AutoMapper
             CreateMap<Seat, SeatVM>();
             CreateMap<FlightSearchResult, FlightSearchResultVM>();
             CreateMap<FlightSegmentGroup, FlightSegmentGroupVM>();
+            CreateMap<Passenger, PassengerVM>();
         
         }
     }

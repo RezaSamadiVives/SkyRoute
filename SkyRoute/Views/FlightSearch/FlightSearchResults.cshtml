@@ -30,81 +30,11 @@
             <div class="row g-4">
                 @foreach (var segment in Model.OutboundFlights)
                 {
-
                     @await Html.PartialAsync("_FlightSeachResultPartial", segment, new ViewDataDictionary(ViewData)
                     {
                         { "TripType", "outbound" },
                         { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() }
                     })
-
-
-
-
-                   @*  <div class="col-12">
-                        <div class="card shadow-sm animate-fade-in">
-                            <div class="card-body" data-flight-type="outbound" data-segment-id="@segment.SegmentId">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5 class="card-title mb-1">
-                                            @segment.Flights.First().FromCity.Name → @segment.Flights.Last().ToCity.Name
-                                        </h5>
-                                        <p class="card-text text-muted mb-0">
-                                            Totale duur: <strong class="card-title">@segment.TotalDuration.Days d @segment.TotalDuration.Hours u @segment.TotalDuration.Minutes min</strong>  | Prijs: <strong class="card-title">€@segment.TotalPrice</strong>
-                                        </p>
-                                        <p class="card-text text-muted mb-0">
-                                            Vertrekdatum: <strong class="card-title">@segment.Flights.First().FlightDate.ToString("M") @segment.Flights.First().DepartureTime.ToString()</strong>  | Aankomstdatum: <strong class="card-title">@segment.Flights.Last().ArrivalDate.ToString("M") @segment.Flights.Last().ArrivalTime.ToString()</strong>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <input class="form-check-input" readonly type="checkbox" data-flight-type="outbound" id="check_@segment.SegmentId" name="check" disabled />
-                                    </div>
-                                    <button class="btn btn-outline-primary select-flight-btn" data-flight-type="outbound" data-segment-id="@segment.SegmentId">Selecteer vlucht</button>
-
-
-
-                                </div>
-                             
-
-                                <button class="btn btn-link text-decoration-none mt-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#segmentDetails-@segment.SegmentId">
-                                    Details tonen
-                                </button>
-
-                                <div class="collapse mt-3" id="segmentDetails-@segment.SegmentId">
-                                    @foreach (var flight in segment.Flights)
-                                    {
-                                        <div class="border-top pt-3">
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <strong class="card-title">@flight.FlightNumber</strong> – @flight.Airline.Name
-                                                    <br />
-                                                    <strong>@flight.FromCity.Name</strong>
-                                                    (@flight.DepartureTime) <strong class="card-title">→</strong>
-                                                    <strong>@flight.ToCity.Name</strong> (@flight.ArrivalTime)
-                                                </div>
-                                                <div class="text-end">
-                                                    Datum: <strong class="card-title">@flight.FlightDate.ToShortDateString()</strong>
-                                                    <br />
-                                                    Klasse: <strong class="card-title">@Model.FormModel?.SelectedTripClass</strong>
-                                                    <br />
-                                                    Prijs: <strong class="card-title">
-                                                        @if (Model.FormModel?.SelectedTripClass == SkyRoute.Helpers.TripClass.Business)
-                                                        {
-                                                            @:€ @flight.PriceBusiness
-                                                        }
-                                                        else
-                                                        {
-                                                            @:€ @flight.PriceEconomy
-                                                        }
-
-                                                    </strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
                 }
             </div>
         }
@@ -121,69 +51,6 @@
             <div class="row g-4">
                 @foreach (var segment in Model.ReturnFlights)
                 {
-                 @*    <div class="col-12">
-                        <div class="card shadow-sm animate-fade-in delay-1">
-                            <div class="card-body" data-flight-type="return" data-segment-id="@segment.SegmentId">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5 class="card-title mb-1">
-                                            @segment.Flights.First().FromCity.Name → @segment.Flights.Last().ToCity.Name
-                                        </h5>
-                                        <p class="card-text text-muted mb-0">
-                                            Totale duur: <strong class="card-title">@segment.TotalDuration.Days d @segment.TotalDuration.Hours u @segment.TotalDuration.Minutes min</strong>  | Prijs: <strong class="card-title">€@segment.TotalPrice</strong>
-                                        </p>
-                                            <p>
-                                            Vertrekdatum: <strong class="card-title">@segment.Flights.First().FlightDate.ToString("M") @segment.Flights.First().DepartureTime.ToString()</strong>  | Aankomstdatum: <strong class="card-title">@segment.Flights.Last().ArrivalDate.ToString("M") @segment.Flights.Last().ArrivalTime.ToString()</strong>
-                                            </p>
-                                    </div>
-                                    <div>
-                                        <input class="form-check-input" type="checkbox" data-flight-type="return" id="check_@segment.SegmentId" name="check" disabled />
-                                    </div>
-                                    <button class="btn btn-outline-primary select-flight-btn" data-flight-type="return" data-segment-id="@segment.SegmentId">Selecteer terugvlucht</button>
-
-
-                                </div>
-                               
-                                <button class="btn btn-link text-decoration-none mt-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#segmentReturnDetails-@segment.SegmentId">
-                                    Details tonen
-                                </button>
-
-                                <div class="collapse mt-3" id="segmentReturnDetails-@segment.SegmentId">
-                                    @foreach (var flight in segment.Flights)
-                                    {
-                                        <div class="border-top pt-3">
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <strong>@flight.FlightNumber</strong> – @flight.Airline.Name
-                                                    <br />
-                                                    @flight.FromCity.Name (@flight.DepartureTime) → @flight.ToCity.Name (@flight.ArrivalTime)
-                                                </div>
-                                                <div class="text-end">
-                                                    Datum: <strong class="card-title">@flight.FlightDate.ToShortDateString()</strong>
-                                                    <br />
-                                                    Klasse: <strong class="card-title">@Model.FormModel?.SelectedTripClass</strong>
-                                                    <br />
-                                                    Prijs: <strong class="card-title">
-                                                        @if (Model.FormModel?.SelectedTripClass == SkyRoute.Helpers.TripClass.Business)
-                                                        {
-                                                            @:€ @flight.PriceBusiness
-                                                        }
-                                                        else
-                                                        {
-                                                            @:€ @flight.PriceEconomy
-                                                        }
-
-                                                    </strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
-
-
                     @await Html.PartialAsync("_FlightSeachResultPartial", segment, new ViewDataDictionary(ViewData)
                     {
                         { "TripType", "return" },
@@ -195,7 +62,7 @@
         }
 
         <div class="mt-4">
-            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Index", "Passengers")">
+            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Index", "Passengers", new {passengersCount = (Model.FormModel?.AdultPassengers ?? 0) + (Model.FormModel?.KidsPassengers ?? 0)})">
                 Verder met boeken
             </a>
         </div>
