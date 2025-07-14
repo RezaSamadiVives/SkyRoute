@@ -1,11 +1,10 @@
 using SkyRoute.Domains.Entities;
 using SkyRoute.Domains.Models;
 
-namespace SkyRoute.Repositories.Interfaces
+namespace SkyRoute.Services.Interfaces
 {
-    public interface IMealOptionDAO : IDAO<MealOption>
+    public interface IMealOptionService : IService<MealOption>
     {
         Task<MealOptionList> GetMealOptionListAsync(int flightId);
-
     }
 }

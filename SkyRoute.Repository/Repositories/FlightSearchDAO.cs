@@ -8,8 +8,6 @@ namespace SkyRoute.Repositories.Repositories
 {
     public class FlightSearchDAO(SkyRouteDbContext context) : BaseDAO<Flight>(context), IFlightSearchDAO
     {
-        private readonly SkyRouteDbContext _context = context;
-
         public async Task<FlightSearchResult> SearchFlightsAsync(
             int fromCityId,
             int toCityId,

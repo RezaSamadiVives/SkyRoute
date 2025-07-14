@@ -4,18 +4,11 @@ using SkyRoute.Repositories.Interfaces;
 
 namespace SkyRoute.Repositories.Repositories
 {
-    public class BaseDAO<T> : IDAO<T> where T : class
+    public class BaseDAO<T>(SkyRouteDbContext context) : IDAO<T> where T : class
     {
-        private readonly SkyRouteDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly SkyRouteDbContext _context = context;
+        protected readonly DbSet<T> _dbSet = context.Set<T>();
 
-        public BaseDAO(SkyRouteDbContext context)
-        {
-            _context = context;
-            _dbSet = _context.Set<T>();
-
-
-        }
         public async Task AddAsync(T entity)
         {
             try
