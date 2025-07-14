@@ -13,6 +13,7 @@ namespace SkyRoute.Domains.Data
         public DbSet<Seat> Seats { get; set; }
         public DbSet<MealOption> MealOptions { get; set; }
         public DbSet<FlightMealOption> FlightMealOptions { get; set; }
+        public DbSet<Passenger> Passengers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,7 +71,12 @@ namespace SkyRoute.Domains.Data
                 .HasOne(fm => fm.MealOption)
                 .WithMany(m => m.FlightMeals)
                 .HasForeignKey(fm => fm.MealOptionId);
-
+                
+            modelBuilder.Entity<Passenger>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             base.OnModelCreating(modelBuilder);
         }
     }
