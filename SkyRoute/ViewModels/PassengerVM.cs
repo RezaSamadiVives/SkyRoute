@@ -24,5 +24,7 @@ namespace SkyRoute.ViewModels
         [Display(Name = "Is Meereizende?")]
         public bool IsFellowPassenger { get; set; }
         public string? UserId { get; set; }
+
+        public List<FlightMealOptionVM> FlightMealOptions { get; set; } = [];
     }
 }

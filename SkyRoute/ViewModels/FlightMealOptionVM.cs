@@ -1,6 +1,4 @@
-﻿using SkyRoute.Domains.Entities;
-
-namespace SkyRoute.ViewModels
+﻿namespace SkyRoute.ViewModels
 {
     public class FlightMealOptionVM
     {

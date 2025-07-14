@@ -26,13 +26,12 @@ namespace SkyRoute.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(PassengerListVM model)
         {
-
-            if (model.Passengers == null || model.Passengers.Count == 0)
+            if (model?.Passengers == null || model.Passengers.Count == 0)
             {
                 ModelState.AddModelError("", "Je moet minstens één passagier toevoegen.");
             }
 
-            int hoofdpassagiers = model.Passengers.Count(p => p.IsFellowPassenger);
+            int hoofdpassagiers = model != null ? model.Passengers.Count(p => p.IsFellowPassenger): 0;
 
             if (hoofdpassagiers == 0)
             {
