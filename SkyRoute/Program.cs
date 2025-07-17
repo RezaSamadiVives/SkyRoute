@@ -34,6 +34,12 @@ builder.Services.AddScoped<IFlightSearchDAO, FlightSearchDAO>();
 builder.Services.AddScoped<IFlightSearchService, FlightSearchService>();
 builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
 
+builder.Services.AddScoped<IMealOptionDAO, MealOptionDAO>();
+builder.Services.AddScoped<IMealOptionService, MealOptionService>();
+builder.Services.AddScoped<IService<MealOption>, MealOptionService>();
+
+
+
 
 
 builder.Services.AddControllersWithViews();

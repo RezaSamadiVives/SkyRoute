@@ -31,7 +31,7 @@ namespace SkyRoute.Controllers
                 ModelState.AddModelError("", "Je moet minstens één passagier toevoegen.");
             }
 
-            int hoofdpassagiers = model != null ? model.Passengers.Count(p => p.IsFellowPassenger) : 0;
+            int hoofdpassagiers = model != null ? model.Passengers.Count(p => !p.IsFellowPassenger) : 0;
 
             if (hoofdpassagiers == 0)
             {
@@ -44,7 +44,7 @@ namespace SkyRoute.Controllers
 
             var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
 
-            if (shoppingCartVM == null)
+            if (shoppingCartVM?.OutboundFlights?.Flights.Count == 0)
             {
                 ModelState.AddModelError("", "Er zijn geen vluchtgegevens beschikbaar. Verzoek eerst een vlucht te kiezen.");
                 return RedirectToAction("Index", "Home");
@@ -64,8 +64,13 @@ namespace SkyRoute.Controllers
                     passenger.UserId = userId;
                 }
 
-                shoppingCartVM.Passengers = model.Passengers;
-                HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
+                if (shoppingCartVM != null)
+                {
+                    shoppingCartVM.Passengers = model.Passengers;
+                    HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
+                }
+
+
             }
 
             return RedirectToAction("Index", "MealOption");

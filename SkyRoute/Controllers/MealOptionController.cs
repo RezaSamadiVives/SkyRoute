@@ -36,8 +36,7 @@ namespace SkyRoute.Controllers
 
                     var flightMealSelect = new FlightMealSelectVM
                     {
-                        Flight = _mapper.Map<FlightVM>(flight),
-                        Passengers = shoppingCartVM.Passengers
+                        Flight = _mapper.Map<FlightVM>(flight)
                     };
 
                     viewModel.OutboundFlightMealSelectLists.Add(flightMealSelect);

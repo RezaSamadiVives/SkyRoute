@@ -25,6 +25,5 @@ namespace SkyRoute.ViewModels
         public bool IsFellowPassenger { get; set; }
         public string? UserId { get; set; }
 
-        public  FlightMealOptionVM? FlightMealOption { get; set; }
     }
 }
