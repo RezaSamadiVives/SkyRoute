@@ -26,12 +26,12 @@ namespace SkyRoute.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(PassengerListVM model)
         {
-            if (model?.Passengers == null || model.Passengers.Count == 0)
+            if (model == null || model?.Passengers == null || model.Passengers.Count == 0)
             {
                 ModelState.AddModelError("", "Je moet minstens één passagier toevoegen.");
             }
 
-            int hoofdpassagiers = model != null ? model.Passengers.Count(p => p.IsFellowPassenger): 0;
+            int hoofdpassagiers = model != null ? model.Passengers.Count(p => p.IsFellowPassenger) : 0;
 
             if (hoofdpassagiers == 0)
             {
@@ -42,25 +42,33 @@ namespace SkyRoute.Controllers
                 ModelState.AddModelError("", "Er mag maar één hoofdpassagier zijn.");
             }
 
+            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+
+            if (shoppingCartVM == null)
+            {
+                ModelState.AddModelError("", "Er zijn geen vluchtgegevens beschikbaar. Verzoek eerst een vlucht te kiezen.");
+                return RedirectToAction("Index", "Home");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-
-            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") ?? new ShoppingCartVM();
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            foreach (var passenger in model.Passengers)
+            if (model != null)
             {
-                passenger.UserId = userId;
+                foreach (var passenger in model.Passengers)
+                {
+                    passenger.UserId = userId;
+                }
+
+                shoppingCartVM.Passengers = model.Passengers;
+                HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
             }
 
-            shoppingCartVM.Passengers = model.Passengers;
-            HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
-
-            return RedirectToAction("Index","MealOption");
+            return RedirectToAction("Index", "MealOption");
         }
     }
 }
