@@ -1,1 +1,63 @@
-<h2>Welkome Maaltijdskeuze</h2>
+@using SkyRoute.ViewModels
+@model MealSelectionFormVM
+
+<h2>Welkom bij Maaltijdkeuze</h2>
+<main>
+    <form method="post">
+        <div class="container">
+            @for (int p = 0; p < Model.PassengerMeals.Count; p++)
+            {
+                var passenger = Model.PassengerMeals[p];
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3>@passenger.Passenger.FirstName @passenger.Passenger.LastName</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @for (int f = 0; f < passenger.FlightMeals.Count; f++)
+                            {
+                                var flightMeal = passenger.FlightMeals[f];
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 border-secondary">
+                                        <div class="card-header bg-secondary text-white">
+                                            <h5>@flightMeal.Flight.FlightNumber - @flightMeal.Flight.FromCity.Name naar
+                                                @flightMeal.Flight.ToCity.Name</h5>
+                                            <small>@flightMeal.Flight.DepartureTime.ToString("dd MMM yyyy HH:mm")</small>
+                                        </div>
+                                        <div class="card-body">
+                                            @foreach (var meal in flightMeal.AvailableMeals)
+                                            {
+                                                <div class="form-check d-flex align-items-center mb-2">
+                                                    <input class="form-check-input me-2" type="radio"
+                                                        name="PassengerMeals[@p].FlightMeals[@f].SelectedMealOptionId"
+                                                        id="meal_@meal.Id" value="@meal.Id"
+                                                        checked="@(flightMeal.SelectedMealOptionId == meal.Id)" />
+                                                    <label class="form-check-label d-flex align-items-center" for="meal_@meal.Id">
+                                                        <img src="@(string.IsNullOrEmpty(meal.ImageUrl) ? Url.Content("~/images/mealoptions/default.jpg") : meal.ImageUrl)"
+                                                            alt="@meal.Name"
+                                                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 10px;" />
+
+                                                        <div>
+                                                            <strong>@meal.Name</strong> <br />
+                                                            <small>@meal.Description</small>
+                                                            @if (meal.IsLocalMeal)
+                                                            {
+                                                                <span class="badge bg-success ms-2">Lokaal</span>
+                                                            }
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Bevestig maaltijdkeuzes</button>
+    </form>
+</main>

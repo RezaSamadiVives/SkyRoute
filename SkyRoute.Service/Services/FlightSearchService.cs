@@ -14,10 +14,15 @@ namespace SkyRoute.Services.Services
             return await _flightSearchDAO.GetAvailableFlights(segmentId, isBusiness, adultCount, kidCount);
         }
 
-        public async Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId, DateTime departureDate, 
+        public async Task<FlightSearchResult> SearchFlightsAsync(int fromCityId, int toCityId, DateTime departureDate,
             DateTime? returnDate, bool isBusiness, bool isRetour, int adultCount, int? kidCount)
         {
             return await _flightSearchDAO.SearchFlightsAsync(fromCityId, toCityId, departureDate, returnDate, isBusiness, isRetour, adultCount, kidCount);
+        }
+
+        public async Task<Flight?> FindFlightWithDetailsAsync(int flightId)
+        {
+            return await _flightSearchDAO.FindFlightWithDetailsAsync(flightId);
         }
     }
 }

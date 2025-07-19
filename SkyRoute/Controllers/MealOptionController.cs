@@ -9,8 +9,14 @@ using SkyRoute.ViewModels;
 namespace SkyRoute.Controllers
 {
     [Authorize]
-    public class MealOptionController(IMealOptionService mealOptionService, IService<Flight> flightService, IMapper mapper) : Controller
+    public class MealOptionController(
+        IFlightSearchService flightSearchService,
+        IMealOptionService mealOptionService,
+        IService<Flight> flightService,
+        IMapper mapper) : Controller
     {
+
+        private readonly IFlightSearchService _flightSearchService = flightSearchService;
         private readonly IMealOptionService _mealOptionService = mealOptionService;
         private readonly IService<Flight> _flightService = flightService;
         private readonly IMapper _mapper = mapper;
@@ -26,25 +32,35 @@ namespace SkyRoute.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var viewModel = new FlightMealSelectListVM();
+            var mealSelectionForm = new MealSelectionFormVM();
 
-            if (shoppingCartVM.OutboundFlights?.Flights != null)
+            if (shoppingCartVM.OutboundFlights?.Flights.Count > 0)
             {
-                foreach (var flightId in shoppingCartVM.OutboundFlights.Flights)
+                foreach (var passenger in shoppingCartVM.Passengers)
                 {
-                    var flight = await _flightService.FindByIdAsync(flightId);
-
-                    var flightMealSelect = new FlightMealSelectVM
+                    var passengerVM = new PassengerMealChoiceVM
                     {
-                        Flight = _mapper.Map<FlightVM>(flight)
+                        Passenger = passenger
                     };
 
-                    viewModel.OutboundFlightMealSelectLists.Add(flightMealSelect);
-                }
+                    foreach (var flightId in shoppingCartVM.OutboundFlights.Flights)
+                    {
+                        var mealOptions = await _mealOptionService.GetMealOptionListAsync(flightId);
 
+                        passengerVM.FlightMeals.Add(new FlightMealSelectionVM
+                        {
+                            Flight = _mapper.Map<FlightVM>(await _flightSearchService.FindFlightWithDetailsAsync(flightId)),
+                            AvailableMeals = _mapper.Map<List<MealOptionVM>>(mealOptions.MealOptionsList.ToList())
+                        });
+
+                    }
+                    mealSelectionForm.PassengerMeals.Add(passengerVM);
+                }
             }
 
-            return View(viewModel);
+
+
+            return View(mealSelectionForm);
         }
 
     }

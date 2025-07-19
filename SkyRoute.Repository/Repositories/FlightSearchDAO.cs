@@ -106,7 +106,7 @@ namespace SkyRoute.Repositories.Repositories
         public async Task<FlightSegmentGroup> GetAvailableFlights(Guid segmentId, bool isBusiness, int adultCount, int? kidCount)
         {
             int passengersCount = adultCount + (kidCount ?? 0);
-            var result = new FlightSegmentGroup() { SegmentId = segmentId};
+            var result = new FlightSegmentGroup() { SegmentId = segmentId };
 
             var flights = await _context.Flights
                .Where(f => f.SegmentId == segmentId)
@@ -118,8 +118,8 @@ namespace SkyRoute.Repositories.Repositories
                .Include(f => f.MealOptions)
                .ToListAsync();
 
-            bool allFlightsHaveEnoughSeats = flights.Count > 0 && 
-                flights.All(f =>f.Seats.Count(s => s.IsAvailable && s.IsBusiness == isBusiness) >= passengersCount);
+            bool allFlightsHaveEnoughSeats = flights.Count > 0 &&
+                flights.All(f => f.Seats.Count(s => s.IsAvailable && s.IsBusiness == isBusiness) >= passengersCount);
 
             if (allFlightsHaveEnoughSeats)
             {
@@ -129,5 +129,17 @@ namespace SkyRoute.Repositories.Repositories
 
             return result;
         }
+
+
+        public async Task<Flight?> FindFlightWithDetailsAsync(int id)
+        {
+            return await _context.Flights
+                .Include(f => f.FromCity)
+                .Include(f => f.ToCity)
+                .Include(f => f.Airline)
+                .FirstOrDefaultAsync(f => f.Id == id);
+        }
+
+
     }
 }
