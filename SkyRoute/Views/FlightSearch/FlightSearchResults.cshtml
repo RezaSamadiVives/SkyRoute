@@ -17,11 +17,11 @@
     <div class="container py-5">
 
         @await Component.InvokeAsync("FlightSearchForm", new
-            {
-                formController = "FlightSearch",
+        {
+            formController = "FlightSearch",
                 formAction = "FlightSearchResults",
                 model = Model.FormModel
-            })
+                })
         <hr />
         <h2 class="mb-4">Heenvluchten</h2>
 
@@ -35,7 +35,7 @@
                         { "TripType", "outbound" },
                         { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() }
                     })
-                }
+                        }
             </div>
         }
         else
@@ -57,19 +57,21 @@
                         { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() }
                     })
 
-                }
+                        }
             </div>
         }
 
         <div class="mt-4">
-            <a id="bookFlightBtn" class="btn btn-primary disabled" href="@Url.Action("Index", "Passengers", new {passengersCount = (Model.FormModel?.AdultPassengers ?? 0) + (Model.FormModel?.KidsPassengers ?? 0)})">
+            <a id="bookFlightBtn" class="btn btn-primary disabled"
+                href="@Url.Action("Index", "Passengers", new { passengersCount = (Model.FormModel?.AdultPassengers ?? 0) + (Model.FormModel?.KidsPassengers ?? 0) })">
                 Verder met boeken
             </a>
         </div>
 
     </div>
-    @section Scripts {
-        <script src="~/js/flightSearchForm.js"></script>
-        <script src="~/js/flightSearchResult.js"></script>
-    }
+
 </main>
+@section Scripts {
+    <script src="~/js/flightSearchForm.js"></script>
+    <script src="~/js/flightSearchResult.js"></script>
+}

@@ -219,3 +219,10 @@ input:focus, select:focus {
     background-color: #f1f8ff;
     border: none;
 }
+
+.form-check.selected {
+    background-color: #FEBE12;
+    border-radius: 0;
+    padding: 1.5rem;
+}
+

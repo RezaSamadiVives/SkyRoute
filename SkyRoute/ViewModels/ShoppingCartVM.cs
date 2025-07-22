@@ -5,6 +5,7 @@
         public FlightSegmentSessionVM? OutboundFlights { get; set; } = new FlightSegmentSessionVM();
         public FlightSegmentSessionVM? RetourFlights { get; set; } = new FlightSegmentSessionVM();
         public List<PassengerVM> Passengers { get; set; } = [];
+        public List<MealChoicePassengerSession> MealChoicePassengerSessions { get; set; } = [];
 
         public decimal Total
         {

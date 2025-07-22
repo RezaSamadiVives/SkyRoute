@@ -59,9 +59,10 @@ namespace SkyRoute.Controllers
 
             if (model != null)
             {
-                foreach (var passenger in model.Passengers)
+                for (int i = 0; i < model.Passengers.Count; i++)
                 {
-                    passenger.UserId = userId;
+                    model.Passengers[i].UserId = userId;
+                    model.Passengers[i].Id = i + 1;
                 }
 
                 if (shoppingCartVM != null)
