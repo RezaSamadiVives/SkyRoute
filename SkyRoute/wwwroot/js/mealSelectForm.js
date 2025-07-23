@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                     .then(res => res.json())
                     .then(data => {
+                        showInfoModal(data.message, !data.success);
                         if (!data.success) {
                             showErrorModal(data.message || "Er is een fout opgetreden.");
                             return;
@@ -64,19 +65,34 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                     .catch(err => {
                         console.error("Fout bij ajax:", err);
-                        showErrorModal("Er is een technische fout opgetreden.");
+                        showInfoModal("Er is een technische fout opgetreden.", true);
                     });
             }
         });
     });
 
-    function showErrorModal(message) {
-        const modalMessage = document.getElementById("errorModalMessage");
+    function showInfoModal(message, isError = false) {
+        const modalMessage = document.getElementById("messageModalBody");
         modalMessage.textContent = message;
 
-        const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
-        errorModal.show();
+        const modalElement = document.getElementById("messageModal");
+        const modalTitle = modalElement.querySelector(".modal-title");
+        const modalHeader = modalElement.querySelector(".modal-header");
+
+        if (isError) {
+            modalTitle.textContent = "Foutmelding";
+            modalHeader.classList.remove("bg-success");
+            modalHeader.classList.add("bg-danger");
+        } else {
+            modalTitle.textContent = "Succes";
+            modalHeader.classList.remove("bg-danger");
+            modalHeader.classList.add("bg-success");
+        }
+
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     }
+
 
     checkIfAllSelected();
 });

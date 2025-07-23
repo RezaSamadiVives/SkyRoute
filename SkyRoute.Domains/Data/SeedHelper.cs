@@ -15,7 +15,7 @@ namespace SkyRoute.Domains.Data
 
             var cities = cityNames.Select(name => new City { Name = name }).ToList();
 
-            if(!context.Cities.Any())
+            if (!context.Cities.Any())
             {
                 context.Cities.AddRange(cities);
                 await context.SaveChangesAsync();
@@ -157,20 +157,72 @@ namespace SkyRoute.Domains.Data
 
             var meals = new List<MealOption>
             {
-                new() { Name = "Standaard maaltijd", Description = "Gegrilde kip met aardappelen en groenten.",IsLocalMeal=false },
-                new() { Name = "Vegetarische maaltijd", Description = "Groenterisotto.",IsLocalMeal=false },
-                new() { Name = "Veganistische maaltijd", Description = "Linzencurry.",IsLocalMeal=false },
-                new() { Name = "Halal maaltijd", Description = "Lam met rijst." , IsLocalMeal = false},
-                new() { Name = "Kosher maaltijd", Description = "Voorgerecht, hoofdgerecht en dessert volgens joodse regels." , IsLocalMeal = false},
-                new() { Name = "Glutenvrije maaltijd", Description = "Kipfilet met groenten.", IsLocalMeal = false },
+                new() {
+                    Name = "Standaard maaltijd",
+                    Description = "Gegrilde kip met aardappelen en groenten.",
+                    IsLocalMeal =false,
+                    ImageUrl = "/images/mealoptions/standaard-maaltijd.jpg" },
+                new() {
+                    Name = "Vegetarische maaltijd",
+                    Description = "Groenterisotto.",
+                    IsLocalMeal =false,
+                    ImageUrl = "/images/mealoptions/vegetarische-maaltijd.jpg" },
+                new() {
+                    Name = "Veganistische maaltijd",
+                    Description = "Linzencurry.",
+                    IsLocalMeal =false,
+                    ImageUrl = "/images/mealoptions/veganische-maaltijd.jpg" },
+                new() {
+                    Name = "Halal maaltijd",
+                    Description = "Lam met rijst." ,
+                    IsLocalMeal = false,
+                    ImageUrl = "/images/mealoptions/halal-maaltijd.jpg"},
+                new() {
+                    Name = "Kosher maaltijd",
+                    Description = "Voorgerecht, hoofdgerecht en dessert volgens joodse regels." ,
+                    IsLocalMeal = false,
+                    ImageUrl = "/images/mealoptions/kosher-maaltijd.jpg"},
+                new() {
+                    Name = "Glutenvrije maaltijd",
+                    Description = "Kipfilet met groenten.",
+                    IsLocalMeal = false,
+                    ImageUrl = "/images/mealoptions/glutenvrije-maaltijd.jpg" },
 
-                new() { Name = "New York special", Description = "Classic pastrami sandwich met zuurkool.", IsLocalMeal=true },
-                new() { Name = "Londen special", Description = "Fish and chips met doperwtenpuree.", IsLocalMeal=true },
-                new() { Name = "Tokio special", Description = "Sushi assortiment met misosoep." , IsLocalMeal=true},
-                new() { Name = "Dubai special", Description = "Kibbeh met hummus en flatbread." , IsLocalMeal=true},
-                new() { Name = "Sydney special", Description = "Barramundi met citroenboter en salade.", IsLocalMeal=true },
-                new() { Name = "Kaapstad special", Description = "Bobotie met gele rijst en chutney." , IsLocalMeal=true},
-                new() { Name = "Singapore special", Description = "Hainanese chicken rice met bouillon." , IsLocalMeal=true}
+                new() {
+                    Name = "New York special",
+                    Description = "Classic pastrami sandwich met zuurkool.",
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/newyork-special.jpg" },
+                new() {
+                    Name = "Londen special",
+                    Description = "Fish and chips met doperwtenpuree.",
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/london-special.jpeg" },
+                new() {
+                    Name = "Tokio special",
+                    Description = "Sushi assortiment met misosoep." ,
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/tokio-special.jpg"},
+                new() {
+                    Name = "Dubai special",
+                    Description = "Kibbeh met hummus en flatbread." ,
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/singapore.jpg"},
+                new() {
+                    Name = "Sydney special",
+                    Description = "Barramundi met citroenboter en salade.",
+                    IsLocalMeal=true ,
+                    ImageUrl = "/images/mealoptions/sydney-special.jpg"},
+                new() {
+                    Name = "Kaapstad special",
+                    Description = "Bobotie met gele rijst en chutney." ,
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/kaapstad-special.jpg"},
+                new() {
+                    Name = "Singapore special",
+                    Description = "Hainanese chicken rice met bouillon." ,
+                    IsLocalMeal=true,
+                    ImageUrl = "/images/mealoptions/singapore-special.jpeg"}
             };
 
             await context.MealOptions.AddRangeAsync(meals);

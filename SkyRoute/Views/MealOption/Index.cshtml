@@ -70,16 +70,15 @@
     </div>
 
     <!-- Bootstrap Modal voor fouten -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="errorModalLabel">Foutmelding</h5>
+                    <h5 class="modal-title" id="messageModalLabel">Foutmelding</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Sluiten"></button>
                 </div>
-                <div class="modal-body" id="errorModalMessage">
-                    <!-- Foutmelding komt hier -->
+                <div class="modal-body" id="messageModalBody">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
@@ -93,5 +92,5 @@
 
 </main>
 @section Scripts {
-    <script src="~/js/mealSelectForm.js"></script>
+    <script src="~/js/mealSelectForm.js?v=@DateTime.Now.Ticks"></script>
 }

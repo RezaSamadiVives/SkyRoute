@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkyRoute.Domains.Models;
 using SkyRoute.Extensions;
+using SkyRoute.Helpers;
 using SkyRoute.Services.Interfaces;
 using SkyRoute.ViewModels;
 
@@ -20,78 +21,6 @@ namespace SkyRoute.Controllers
         private readonly IMapper _mapper = mapper;
 
 
-        /* public async Task<IActionResult> Index()
-        {
-            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-
-            if (shoppingCartVM == null || shoppingCartVM.OutboundFlights?.Flights.Count == 0)
-            {
-                ModelState.AddModelError("", "Er zijn geen vluchtgegevens beschikbaar. Verzoek eerst een vlucht te kiezen.");
-                return RedirectToAction("Index", "Home");
-            }
-
-            var mealSelectionForm = new MealSelectionFormVM();
-
-            if (shoppingCartVM.OutboundFlights?.Flights.Count > 0)
-            {
-                for (int i = 0; i < shoppingCartVM.Passengers.Count; i++)
-                {
-                    var passenger = shoppingCartVM.Passengers[i];
-                    passenger.Id = i + 1;
-
-                    var passengerVM = new PassengerMealChoiceVM
-                    {
-                        Passenger = passenger
-                    };
-
-                    foreach (var flightId in shoppingCartVM.OutboundFlights.Flights)
-                    {
-                        var mealOptions = await GetMealOptionList(flightId);
-
-                        passengerVM.FlightMeals.Add(new FlightMealSelectionVM
-                        {
-                            Flight = _mapper.Map<FlightVM>(await _flightSearchService.FindFlightWithDetailsAsync(flightId)),
-                            AvailableMeals = _mapper.Map<List<MealOptionVM>>(mealOptions.MealOptionsList.ToList())
-                        });
-
-                    }
-                    mealSelectionForm.PassengerMeals.Add(passengerVM);
-                }
-            }
-
-            if (shoppingCartVM.RetourFlights?.Flights.Count > 0)
-            {
-                for (int i = 0; i < shoppingCartVM.Passengers.Count; i++)
-                {
-                    var passenger = shoppingCartVM.Passengers[i];
-                    passenger.Id = i + 1;
-
-                    var passengerVM = new PassengerMealChoiceVM
-                    {
-                        Passenger = passenger
-                    };
-
-                    foreach (var flightId in shoppingCartVM.RetourFlights.Flights)
-                    {
-                        var mealOptions = await GetMealOptionList(flightId);
-
-                        passengerVM.FlightMeals.Add(new FlightMealSelectionVM
-                        {
-                            Flight = _mapper.Map<FlightVM>(await _flightSearchService.FindFlightWithDetailsAsync(flightId)),
-                            AvailableMeals = _mapper.Map<List<MealOptionVM>>(mealOptions.MealOptionsList.ToList())
-                        });
-
-                    }
-                    mealSelectionForm.PassengerMeals.Add(passengerVM);
-                }
-            }
-
-
-
-            return View(mealSelectionForm);
-        }
- */
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -107,13 +36,13 @@ namespace SkyRoute.Controllers
 
             if (shoppingCartVM.OutboundFlights?.Flights.Count > 0)
             {
-                var outboundMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.OutboundFlights.Flights);
+                var outboundMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.OutboundFlights.Flights, TripType.Enkel);
                 mealSelectionForm.PassengerMeals.AddRange(outboundMeals);
             }
 
             if (shoppingCartVM.RetourFlights?.Flights.Count > 0)
             {
-                var retourMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.RetourFlights.Flights);
+                var retourMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.RetourFlights.Flights, TripType.Retour);
                 mealSelectionForm.PassengerMeals.AddRange(retourMeals);
             }
 
@@ -126,7 +55,7 @@ namespace SkyRoute.Controllers
         {
             if (!IsValidSelection(selection))
             {
-                return Json(new { success = false, message ="Ongeldige keuze" });
+                return Json(new { success = false, message = "Ongeldige keuze" });
             }
 
             var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
@@ -134,27 +63,27 @@ namespace SkyRoute.Controllers
                             || shoppingCartVM.OutboundFlights?.Flights.Count == 0
                             || shoppingCartVM.Passengers.Count == 0)
             {
-                return Json(new { success = false, message ="Er zijn geen vlucht - en passagier informatie beschikbaar." });
+                return Json(new { success = false, message = "Er zijn geen vlucht - en passagier informatie beschikbaar." });
             }
 
             var passengers = shoppingCartVM.Passengers;
             var selectedPassenger = passengers.FirstOrDefault(f => f.Id == selection.TempPassengerId);
             if (selectedPassenger == null)
             {
-                return Json(new { success = false, message ="Geen passagier gevonden met deze informatie." });
+                return Json(new { success = false, message = "Geen passagier gevonden met deze informatie." });
             }
 
             var flight = await _flightSearchService.FindByIdAsync(selection.FlightId);
             if (flight == null)
             {
-                return Json(new { success = false, message ="Er is geen vlucht met deze gegevens gevonden." });
+                return Json(new { success = false, message = "Er is geen vlucht met deze gegevens gevonden." });
             }
 
             var mealOptions = await GetMealOptionList(flight.Id);
             var mealOption = mealOptions?.MealOptionsList.FirstOrDefault(m => m.Id == selection.MealOptionId);
             if (mealOption == null)
             {
-                return Json(new { success = false, message ="Er is geen maaltijd met deze informatie gevonden." });
+                return Json(new { success = false, message = "Er is geen maaltijd met deze informatie gevonden." });
             }
 
             bool alreadySelected = shoppingCartVM.MealChoicePassengerSessions.Any(x =>
@@ -181,7 +110,7 @@ namespace SkyRoute.Controllers
             }
 
             HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
-            return Json(new { success = true, message="Maaltijdkeuze is opgeslagen." });
+            return Json(new { success = true, message = $"Maaltijdkeuze is opgeslagen voor {selectedPassenger.FirstName} {selectedPassenger.LastName}." });
         }
 
         private static bool IsValidSelection(MealSelectionPassengerVM selection)
@@ -192,7 +121,7 @@ namespace SkyRoute.Controllers
                 && selection.MealOptionId > 0;
         }
 
-        private async Task<List<PassengerMealChoiceVM>> GeneratePassengerMealChoices(List<PassengerVM> passengers, List<int> flightIds)
+        private async Task<List<PassengerMealChoiceVM>> GeneratePassengerMealChoices(List<PassengerVM> passengers, List<int> flightIds, TripType tripType)
         {
             var passengerMeals = new List<PassengerMealChoiceVM>();
 
