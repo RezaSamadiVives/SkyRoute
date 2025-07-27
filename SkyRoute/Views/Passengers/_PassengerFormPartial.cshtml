@@ -41,7 +41,7 @@
             <label asp-for="Birthday" class="form-label">Geboortedatum</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-calendar-heart"></i></span>
-                <input asp-for="Birthday" class="form-control" type="date" value="" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input asp-for="Birthday" class="form-control" type="date" value="" max="@DateTime.Today.ToString("dd-MM-yyyy")" />
             </div>
             <span asp-validation-for="Birthday" class="text-danger"></span>
         </div>

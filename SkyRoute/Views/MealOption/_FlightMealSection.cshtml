@@ -1,0 +1,43 @@
+@using SkyRoute.Helpers
+@model IEnumerable<SkyRoute.ViewModels.FlightMealSelectionVM>
+@{
+    int passengerIndex = ViewBag.PassengerIndex;
+    var passenger = (SkyRoute.ViewModels.PassengerVM)ViewBag.Passenger;
+}
+
+@for (int f = 0; f < Model.Count(); f++)
+{
+    var flightMeal = Model.ToList()[f];
+    var radioName = $"meal_{passengerIndex}_{flightMeal.Flight.Id}";
+
+    <div class="card p-3 mb-3">
+        <h5>
+            @flightMeal.Flight.FlightNumber - @flightMeal.Flight.FromCity.Name →
+            @flightMeal.Flight.ToCity.Name
+        </h5>
+
+        @foreach (var meal in flightMeal.AvailableMeals)
+        {
+            var radioId = $"meal_{passengerIndex}_{flightMeal.Flight.Id}_{meal.Id}";
+
+            <div class="form-check d-flex align-items-center mb-3">
+                <input class="form-check-input meal-radio" type="radio" name="@radioName" id="@radioId"
+                    value="@meal.Id" data-passenger-id="@passenger.Id"
+                    data-flight-id="@flightMeal.Flight.Id" />
+                <label class="form-check-label d-flex align-items-center w-100" for="@radioId">
+                    <img src="@(string.IsNullOrEmpty(meal.ImageUrl) ? Url.Content("~/images/mealoptions/meal.jpeg") : meal.ImageUrl)"
+                        alt="@meal.Name"
+                        style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;" />
+                    <div>
+                        <strong>@meal.Name</strong><br />
+                        <small class="text-muted">@meal.Description</small>
+                        @if (meal.IsLocalMeal)
+                        {
+                            <span class="badge bg-success ms-2">Lokaal</span>
+                        }
+                    </div>
+                </label>
+            </div>
+        }
+    </div>
+}

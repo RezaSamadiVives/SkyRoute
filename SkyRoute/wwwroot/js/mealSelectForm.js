@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(data => {
                         showInfoModal(data.message, !data.success);
                         if (!data.success) {
-                            showErrorModal(data.message || "Er is een fout opgetreden.");
+                            showInfoModal(data.message || "Er is een fout opgetreden.");
                             return;
                         }
 

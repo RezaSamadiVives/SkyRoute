@@ -36,14 +36,29 @@ namespace SkyRoute.Controllers
 
             if (shoppingCartVM.OutboundFlights?.Flights.Count > 0)
             {
-                var outboundMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.OutboundFlights.Flights, TripType.Enkel);
+                var outboundMeals = await GeneratePassengerMealChoices(
+                    shoppingCartVM.Passengers,
+                    shoppingCartVM.OutboundFlights.Flights,
+                    TripType.Enkel
+                    );
+
                 mealSelectionForm.PassengerMeals.AddRange(outboundMeals);
             }
 
             if (shoppingCartVM.RetourFlights?.Flights.Count > 0)
             {
-                var retourMeals = await GeneratePassengerMealChoices(shoppingCartVM.Passengers, shoppingCartVM.RetourFlights.Flights, TripType.Retour);
+                var retourMeals = await GeneratePassengerMealChoices(
+                    shoppingCartVM.Passengers,
+                    shoppingCartVM.RetourFlights.Flights,
+                    TripType.Retour
+                    );
+
                 mealSelectionForm.PassengerMeals.AddRange(retourMeals);
+            }
+
+            foreach (var passenger in mealSelectionForm.PassengerMeals)
+            {
+                passenger.FlightMeals = [.. passenger.FlightMeals.OrderBy(f => f.TripType)];
             }
 
             return View(mealSelectionForm);
@@ -121,7 +136,10 @@ namespace SkyRoute.Controllers
                 && selection.MealOptionId > 0;
         }
 
-        private async Task<List<PassengerMealChoiceVM>> GeneratePassengerMealChoices(List<PassengerVM> passengers, List<int> flightIds, TripType tripType)
+        private async Task<List<PassengerMealChoiceVM>> GeneratePassengerMealChoices(
+            List<PassengerVM> passengers,
+            List<int> flightIds,
+            TripType tripType)
         {
             var passengerMeals = new List<PassengerMealChoiceVM>();
 
@@ -141,7 +159,8 @@ namespace SkyRoute.Controllers
                     passengerVM.FlightMeals.Add(new FlightMealSelectionVM
                     {
                         Flight = _mapper.Map<FlightVM>(await _flightSearchService.FindFlightWithDetailsAsync(flightId)),
-                        AvailableMeals = _mapper.Map<List<MealOptionVM>>(mealOptions.MealOptionsList.ToList())
+                        AvailableMeals = _mapper.Map<List<MealOptionVM>>(mealOptions.MealOptionsList.ToList()),
+                        TripType = tripType
                     });
                 }
 
