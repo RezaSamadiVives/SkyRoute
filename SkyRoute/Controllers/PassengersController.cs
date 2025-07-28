@@ -10,22 +10,62 @@ namespace SkyRoute.Controllers
     public class PassengersController : Controller
     {
         [HttpGet]
-        public IActionResult Index(int passengersCount)
+        public IActionResult Index(int? passengersCount = null)
         {
+            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+
             var model = new PassengerListVM();
 
-            for (int i = 0; i < passengersCount; i++)
+            // Als er al passagiers in sessie zijn: laad die
+            if (shoppingCartVM?.Passengers != null && shoppingCartVM.Passengers.Count > 0)
             {
-                model.Passengers.Add(new PassengerVM());
+                model.Passengers = shoppingCartVM.Passengers;
+            }
+            // Anders: begin met leeg formulier gebaseerd op meegegeven count
+            else if (passengersCount.HasValue && passengersCount.Value > 0)
+            {
+                for (int i = 0; i < passengersCount.Value; i++)
+                {
+                    model.Passengers.Add(new PassengerVM());
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Er is geen passagiersinformatie beschikbaar.");
             }
 
             return View(model);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(PassengerListVM model)
         {
+            var action = Request.Form["action"].ToString();
+
+            // Actie: Voeg passagier toe
+            if (action == "add")
+            {
+                model.Passengers.Add(new PassengerVM());
+                return View(model);
+            }
+
+            // Actie: Verwijder passagier
+            if (action.StartsWith("remove-Passengers["))
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(action, @"remove-Passengers\[(\d+)\]");
+                if (match.Success && int.TryParse(match.Groups[1].Value, out int indexToRemove))
+                {
+                    if (indexToRemove >= 0 && indexToRemove < model.Passengers.Count)
+                    {
+                        model.Passengers.RemoveAt(indexToRemove);
+                    }
+                }
+
+                return View(model);
+            }
+
             if (model == null || model?.Passengers == null || model.Passengers.Count == 0)
             {
                 ModelState.AddModelError("", "Je moet minstens één passagier toevoegen.");
@@ -44,7 +84,7 @@ namespace SkyRoute.Controllers
 
             var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
 
-            if (shoppingCartVM?.OutboundFlights?.Flights.Count == 0)
+            if (shoppingCartVM == null || shoppingCartVM.OutboundFlights?.Flights.Count == 0)
             {
                 ModelState.AddModelError("", "Er zijn geen vluchtgegevens beschikbaar. Verzoek eerst een vlucht te kiezen.");
                 return RedirectToAction("Index", "Home");

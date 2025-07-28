@@ -15,7 +15,7 @@
 
 
     <div class="container py-5">
-
+        @await Html.PartialAsync("_BookingWizard", "vlucht") 
         @await Component.InvokeAsync("FlightSearchForm", new
         {
             formController = "FlightSearch",

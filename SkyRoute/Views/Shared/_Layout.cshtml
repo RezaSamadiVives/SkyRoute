@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -17,8 +19,9 @@
                     <img src="~/images/logo.png" alt="SkyRoute" class="logo" />
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -29,14 +32,16 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">Over ons</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">Over
+                                ons</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Airlines" asp-action="Index">Vliegtuigmaatschappijen</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Airlines"
+                                asp-action="Index">Vliegtuigmaatschappijen</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
-                                <img src="~/Images/Shoppingcart.png" alt="Shoppingcart">
+                                @await Component.InvokeAsync("ShoppingCartIcon")
                             </a>
                         </li>
                     </ul>
@@ -71,4 +76,5 @@
     @await RenderSectionAsync("Scripts", required: false)
     <partial name="_ValidationScriptsPartial" />
 </body>
+
 </html>

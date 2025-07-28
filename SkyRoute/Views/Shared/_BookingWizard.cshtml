@@ -1,0 +1,48 @@
+@using SkyRoute.Extensions
+@using SkyRoute.ViewModels
+@model string
+
+@{
+    var currentStep = Model?.ToLower() ?? "vlucht";
+    var shoppingCart = Context.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+
+    bool hasFlight = shoppingCart?.OutboundFlights?.Flights?.Any() == true;
+    bool hasPassengers = shoppingCart?.Passengers?.Any() == true;
+    bool hasMeals = shoppingCart?.MealChoicePassengerSessions?.Any() == true;
+}
+
+<div class="wizard-container">
+    <ul class="wizard-steps">
+        <li class="step @(currentStep == "vlucht" ? "active" : (hasFlight ? "done" : "disabled"))">
+            @if (hasFlight || currentStep == "vlucht") {
+                <a asp-controller="FlightSearch" asp-action="FlightSearchResults">Vlucht</a>
+            } else {
+                <span>Vlucht</span>
+            }
+        </li>
+
+        <li class="step @(currentStep == "passengers" ? "active" : (hasPassengers ? "done" : (!hasFlight ? "disabled" : "")))">
+            @if (hasFlight) {
+                <a asp-controller="Passengers" asp-action="Index">Passagiers</a>
+            } else {
+                <span>Passagiers</span>
+            }
+        </li>
+
+        <li class="step @(currentStep == "meals" ? "active" : (hasMeals ? "done" : (!hasPassengers ? "disabled" : "")))">
+            @if (hasPassengers) {
+                <a asp-controller="MealOption" asp-action="Index">Maaltijden</a>
+            } else {
+                <span>Maaltijden</span>
+            }
+        </li>
+
+        <li class="step @(currentStep == "overzicht" ? "active" : (!hasMeals ? "disabled" : ""))">
+            @if (hasMeals) {
+                <a asp-controller="ShoppingCart" asp-action="Index">Overzicht</a>
+            } else {
+                <span>Overzicht</span>
+            }
+        </li>
+    </ul>
+</div>

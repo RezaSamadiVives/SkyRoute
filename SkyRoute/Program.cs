@@ -1,5 +1,8 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SkyRoute.Data;
 using SkyRoute.Domains.Data;
 using SkyRoute.Domains.Entities;
@@ -54,7 +57,21 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(1);
 });
 
+// Cultuurinstellingen: nl-BE en nl-NL
+var supportedCultures = new[] { new CultureInfo("nl-BE"), new CultureInfo("nl-NL") };
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("nl-BE");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
 var app = builder.Build();
+
+var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(localizationOptions);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -84,10 +101,9 @@ app.Use(async (context, next) =>
         context.Response.Redirect("/Error/NotFound");
     }
 });
+
 app.UseRouting();
-
 app.UseSession();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -17,6 +17,7 @@
     @Html.AntiForgeryToken()
 
     <div class="container py-5">
+        @await Html.PartialAsync("_BookingWizard", "meals") 
         <h2 class="mb-4">Kies jouw gewenste maaltijd per passagier en per vlucht</h2>
 
         @if (passengersWithOutboundFlights.Any())
