@@ -2,17 +2,25 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkyRoute.Extensions;
+using SkyRoute.Services;
 using SkyRoute.ViewModels;
 
 namespace SkyRoute.Controllers
 {
     [Authorize]
-    public class PassengersController : Controller
+    public class PassengersController(
+        IPassengerService passengerService,
+        IShoppingcartService shoppingcartService,
+        IPassengerValidator passengerValidator) : Controller
     {
+        private readonly IPassengerService _passengerService = passengerService;
+        private readonly IShoppingcartService _shoppingcartService = shoppingcartService;
+        private readonly IPassengerValidator _passengerValidator = passengerValidator;
+
         [HttpGet]
         public IActionResult Index(int? passengersCount = null)
         {
-            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session); //HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
 
             var model = new PassengerListVM();
 
@@ -47,7 +55,7 @@ namespace SkyRoute.Controllers
             // Actie: Voeg passagier toe
             if (action == "add")
             {
-                model.Passengers.Add(new PassengerVM());
+                _passengerService.AddPassenger(model);
                 return View(model);
             }
 
@@ -57,38 +65,22 @@ namespace SkyRoute.Controllers
                 var match = System.Text.RegularExpressions.Regex.Match(action, @"remove-Passengers\[(\d+)\]");
                 if (match.Success && int.TryParse(match.Groups[1].Value, out int indexToRemove))
                 {
-                    if (indexToRemove >= 0 && indexToRemove < model.Passengers.Count)
-                    {
-                        model.Passengers.RemoveAt(indexToRemove);
-                    }
+                    _passengerService.RemovePassengerAt(model, indexToRemove);
                 }
 
                 return View(model);
             }
 
-            if (model == null || model?.Passengers == null || model.Passengers.Count == 0)
-            {
-                ModelState.AddModelError("", "Je moet minstens één passagier toevoegen.");
-            }
+            var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session);
 
-            int hoofdpassagiers = model != null ? model.Passengers.Count(p => !p.IsFellowPassenger) : 0;
-
-            if (hoofdpassagiers == 0)
-            {
-                ModelState.AddModelError("", "Geef aan wie de hoofdpassagier is.");
-            }
-            else if (hoofdpassagiers > 1)
-            {
-                ModelState.AddModelError("", "Er mag maar één hoofdpassagier zijn.");
-            }
-
-            var shoppingCartVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-
-            if (shoppingCartVM == null || shoppingCartVM.OutboundFlights?.Flights.Count == 0)
+             if (shoppingCartVM == null || shoppingCartVM.OutboundFlights?.Flights.Count == 0)
             {
                 ModelState.AddModelError("", "Er zijn geen vluchtgegevens beschikbaar. Verzoek eerst een vlucht te kiezen.");
                 return RedirectToAction("Index", "Home");
             }
+
+
+            _passengerValidator.Validate(model, ModelState);
 
             if (!ModelState.IsValid)
             {
@@ -96,21 +88,16 @@ namespace SkyRoute.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                ModelState.AddModelError("", "Er is geen ingelogde gebruiker gevonden");
+                return RedirectToAction("Index", "Home");
+            }
 
             if (model != null)
             {
-                for (int i = 0; i < model.Passengers.Count; i++)
-                {
-                    model.Passengers[i].UserId = userId;
-                    model.Passengers[i].Id = i + 1;
-                }
-
-                if (shoppingCartVM != null)
-                {
-                    shoppingCartVM.Passengers = model.Passengers;
-                    HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
-                }
-
+                _passengerService.UpdatePassengerIdsAndUser(model, userId);
+                _shoppingcartService.UpdatePassengerShoppingCart(model, HttpContext.Session);
 
             }
 

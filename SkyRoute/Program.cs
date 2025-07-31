@@ -8,6 +8,7 @@ using SkyRoute.Domains.Data;
 using SkyRoute.Domains.Entities;
 using SkyRoute.Repositories.Interfaces;
 using SkyRoute.Repositories.Repositories;
+using SkyRoute.Services;
 using SkyRoute.Services.Interfaces;
 using SkyRoute.Services.Services;
 
@@ -41,8 +42,9 @@ builder.Services.AddScoped<IMealOptionDAO, MealOptionDAO>();
 builder.Services.AddScoped<IMealOptionService, MealOptionService>();
 builder.Services.AddScoped<IService<MealOption>, MealOptionService>();
 
-
-
+builder.Services.AddScoped<IPassengerService, PassengerService>();
+builder.Services.AddScoped<IShoppingcartService, ShoppingcartService>();
+builder.Services.AddScoped<IPassengerValidator, PassengerValidator>();
 
 
 builder.Services.AddControllersWithViews();
