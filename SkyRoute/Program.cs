@@ -46,6 +46,8 @@ builder.Services.AddScoped<IPassengerService, PassengerService>();
 builder.Services.AddScoped<IShoppingcartService, ShoppingcartService>();
 builder.Services.AddScoped<IPassengerValidator, PassengerValidator>();
 
+builder.Services.AddScoped<IMealOptionSelectionService, MealOptionSelectionService>();
+builder.Services.AddScoped<IMealOptionViewModelBuilder , MealOptionViewModelBuilder>();
 
 builder.Services.AddControllersWithViews();
 

@@ -8,10 +8,8 @@ using SkyRoute.ViewModels;
 
 namespace SkyRoute.Controllers
 {
-    public class FlightSearchController(IFlightSearchService flightSearchService, IMapper mapper) : Controller
+    public class FlightSearchController(IFlightSearchService _flightSearchService, IMapper _mapper) : Controller
     {
-        private readonly IFlightSearchService _flightSearchService = flightSearchService;
-        private readonly IMapper _mapper = mapper;
 
         
         [HttpGet]

@@ -6,17 +6,14 @@ using SkyRoute.ViewModels;
 
 namespace SkyRoute.Controllers
 {
-    public class AirlinesController(IService<Airline> airlineService, IMapper mapper) : Controller
+    public class AirlinesController(IService<Airline> _airlineService, IMapper _mapper) : Controller
     {
-        private readonly IService<Airline> airlineService = airlineService;
-        private readonly IMapper _mapper = mapper;
-
         // GET: Airlines
         public async Task<IActionResult> Index()
         {
             try
             {
-                var airlines = await airlineService.GetAllAsync();
+                var airlines = await _airlineService.GetAllAsync();
                 List<AirlineVM> airlinesVM = _mapper.Map<List<AirlineVM>>(airlines);
                 return View(airlinesVM);
             }

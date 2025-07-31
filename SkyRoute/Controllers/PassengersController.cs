@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SkyRoute.Extensions;
 using SkyRoute.Services;
 using SkyRoute.ViewModels;
 
@@ -9,18 +8,15 @@ namespace SkyRoute.Controllers
 {
     [Authorize]
     public class PassengersController(
-        IPassengerService passengerService,
-        IShoppingcartService shoppingcartService,
-        IPassengerValidator passengerValidator) : Controller
+        IPassengerService _passengerService,
+        IShoppingcartService _shoppingcartService,
+        IPassengerValidator _passengerValidator) : Controller
     {
-        private readonly IPassengerService _passengerService = passengerService;
-        private readonly IShoppingcartService _shoppingcartService = shoppingcartService;
-        private readonly IPassengerValidator _passengerValidator = passengerValidator;
 
         [HttpGet]
         public IActionResult Index(int? passengersCount = null)
         {
-            var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session); //HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session);
 
             var model = new PassengerListVM();
 

@@ -10,6 +10,11 @@ namespace SkyRoute.Services
             return session.GetObject<ShoppingCartVM>("ShoppingCart") ?? new ShoppingCartVM();
         }
 
+        public void SetShoppingObject(ShoppingCartVM shoppingCartVM, ISession session)
+        {
+             session.SetObject("ShoppingCart", shoppingCartVM);
+        }
+
         public void UpdatePassengerShoppingCart(PassengerListVM model, ISession session)
         {
             var cart = GetShoppingCart(session);
