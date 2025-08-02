@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SkyRoute.Domains\SkyRoute.Domains.csproj" />
-    <ProjectReference Include="..\SkyRoute.Service\SkyRoute.Services.csproj" />
+    <ProjectReference Include="..\SkyRoute.Services\SkyRoute.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

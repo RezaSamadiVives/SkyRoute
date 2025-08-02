@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyRoute", "SkyRoute\SkyRoute.csproj", "{76ECD14A-A08A-4D28-BBDD-14280EB7AC3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyRoute.Services", "SkyRoute.Service\SkyRoute.Services.csproj", "{BDC89A15-A21F-4E2D-8B22-18079F58ECDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyRoute.Services", "SkyRoute.Services\SkyRoute.Services.csproj", "{BDC89A15-A21F-4E2D-8B22-18079F58ECDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyRoute.Repositories", "SkyRoute.Repository\SkyRoute.Repositories.csproj", "{395EFC92-638D-4F25-92A1-8CE6979E7878}"
 EndProject
