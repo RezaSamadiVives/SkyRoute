@@ -1,4 +1,7 @@
-﻿namespace SkyRoute.Services.Interfaces
+﻿using SkyRoute.Domains.Entities;
+using SkyRoute.Domains.Models;
+
+namespace SkyRoute.Services.Interfaces
 {
     public interface IService<T> where T : class
     {

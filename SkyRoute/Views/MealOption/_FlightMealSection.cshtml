@@ -23,7 +23,7 @@
             <div class="form-check d-flex align-items-center mb-3">
                 <input class="form-check-input meal-radio" type="radio" name="@radioName" id="@radioId"
                     value="@meal.Id" data-passenger-id="@passenger.Id"
-                    data-flight-id="@flightMeal.Flight.Id" />
+                    data-flight-id="@flightMeal.Flight.Id" @(meal.Id == flightMeal.SelectedMealOptionId ? "checked" : "")/>
                 <label class="form-check-label d-flex align-items-center w-100" for="@radioId">
                     <img src="@(string.IsNullOrEmpty(meal.ImageUrl) ? Url.Content("~/images/mealoptions/meal.jpeg") : meal.ImageUrl)"
                         alt="@meal.Name"
