@@ -58,7 +58,7 @@ builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "be.VIVES.Session";
 
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
 // Cultuurinstellingen: nl-BE en nl-NL

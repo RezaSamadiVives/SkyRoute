@@ -43,8 +43,11 @@
             <label asp-for="Birthday" class="form-label">Geboortedatum</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-calendar-heart"></i></span>
-                <input asp-for="Birthday" class="form-control" type="text"
-                    max="@DateTime.Today.ToString("dd-MM-yyyy")" />
+                @{
+                    var birthday = Model.Birthday == DateTime.MinValue ? DateTime.Today : Model.Birthday;
+                }
+                <input asp-for="Birthday" class="form-control" type="text" max="@DateTime.Today.ToString("dd-MM-yyyy")"
+                    value="@birthday.ToString("dd-MM-yyyy")"  />
             </div>
             <span asp-validation-for="Birthday" class="text-danger"></span>
         </div>
@@ -58,15 +61,16 @@
                 </label>
             </div>
         </div>
-        @if (canRemove){
-              <div class="text-end">
-            <button type="submit" name="action" value="remove-@ViewData.TemplateInfo.HtmlFieldPrefix"
-                class="btn btn-danger btn-sm">
-                <i class="bi bi-trash"></i> Verwijderen
-            </button>
-        </div>
+        @if (canRemove)
+        {
+            <div class="text-end">
+                <button type="submit" name="action" value="remove-@ViewData.TemplateInfo.HtmlFieldPrefix"
+                    class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> Verwijderen
+                </button>
+            </div>
         }
-      
+
 
     </div>
 </div>

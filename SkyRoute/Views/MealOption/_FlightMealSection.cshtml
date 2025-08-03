@@ -20,7 +20,7 @@
         {
             var radioId = $"meal_{passengerIndex}_{flightMeal.Flight.Id}_{meal.Id}";
 
-            <div class="form-check d-flex align-items-center mb-3">
+            <div class="form-check d-flex align-items-center mb-3 @(meal.Id == flightMeal.SelectedMealOptionId ? "selected" : "")">
                 <input class="form-check-input meal-radio" type="radio" name="@radioName" id="@radioId"
                     value="@meal.Id" data-passenger-id="@passenger.Id"
                     data-flight-id="@flightMeal.Flight.Id" @(meal.Id == flightMeal.SelectedMealOptionId ? "checked" : "")/>
