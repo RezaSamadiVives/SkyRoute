@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({
                 segmentId: segmentId,
                 isBusiness: isBusiness,
-                isRetour:isRetour,
+                isRetour: isRetour,
                 adultPassengers: adultCount,
                 kidsPassengers: kidsCount
             })
@@ -113,11 +113,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const segmentId = this.getAttribute('data-segment-id');
             const type = this.getAttribute('data-flight-type');
 
+            sessionStorage.setItem("sessionActive", "true");
+            
             if (type === 'outbound') {
                 selectFlight(segmentId);
             } else if (type === 'return') {
                 selectReturnFlight(segmentId);
             }
+
         });
     });
 });

@@ -79,6 +79,26 @@
     <script src="~/js/sessionCounter.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <partial name="_ValidationScriptsPartial" />
+
+    <!-- Sessieverlopen Modal -->
+   <div id="sessionModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Sessie verloopt bijna</h5>
+            </div>
+            <div class="modal-body">
+                <p>Je sessie verloopt binnen <span id="modal-countdown">5:00</span> minuten. Wat wil je doen?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="extend-session" class="btn btn-success">Verleng sessie</button>
+                <button id="restart-session" class="btn btn-outline-secondary">Nieuwe sessie</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 
 </html>

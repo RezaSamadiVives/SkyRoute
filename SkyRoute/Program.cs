@@ -47,7 +47,7 @@ builder.Services.AddScoped<IShoppingcartService, ShoppingcartService>();
 builder.Services.AddScoped<IPassengerValidator, PassengerValidator>();
 
 builder.Services.AddScoped<IMealOptionSelectionService, MealOptionSelectionService>();
-builder.Services.AddScoped<IMealOptionViewModelBuilder , MealOptionViewModelBuilder>();
+builder.Services.AddScoped<IMealOptionViewModelBuilder, MealOptionViewModelBuilder>();
 
 builder.Services.AddControllersWithViews();
 
@@ -57,8 +57,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "be.VIVES.Session";
-
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(6);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 // Cultuurinstellingen: nl-BE en nl-NL
@@ -116,7 +117,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var skyRouteDbContext = scope.ServiceProvider.GetRequiredService<SkyRouteDbContext>();
     await skyRouteDbContext.Database.MigrateAsync();

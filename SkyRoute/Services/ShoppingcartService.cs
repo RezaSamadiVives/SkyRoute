@@ -5,16 +5,26 @@ namespace SkyRoute.Services
 {
     public class ShoppingcartService : IShoppingcartService
     {
+
+
         public ShoppingCartVM GetShoppingCart(ISession session)
         {
             return session.GetObject<ShoppingCartVM>("ShoppingCart") ?? new ShoppingCartVM();
         }
 
-        public void SetShoppingObject(ShoppingCartVM shoppingCartVM, ISession session)
+        public void SetSessionStart(ISession session, string sessionKey)
         {
-             session.SetObject("ShoppingCart", shoppingCartVM);
+            session.SetString(sessionKey, DateTime.UtcNow.ToString());
         }
 
+        public void SetShoppingObject(ShoppingCartVM shoppingCartVM, ISession session)
+        {
+            session.SetObject("ShoppingCart", shoppingCartVM);
+        }
+        public void ClearSession(ISession session)
+        {
+            session.Clear();
+        }
         public void UpdatePassengerShoppingCart(PassengerListVM model, ISession session)
         {
             var cart = GetShoppingCart(session);
