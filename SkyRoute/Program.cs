@@ -57,7 +57,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "be.VIVES.Session";
-    options.IdleTimeout = TimeSpan.FromMinutes(6);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });

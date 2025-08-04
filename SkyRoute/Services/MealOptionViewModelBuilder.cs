@@ -52,7 +52,7 @@ namespace SkyRoute.Services
                 {
                     var flight = await _flightSearchService.FindFlightWithDetailsAsync(flightId);
                     var meals = await _mealOptionService.GetMealOptionListAsync(flightId);
-                    var existingChoice = existingChoices?.FirstOrDefault(f => f.FlightId == flightId);
+                    var existingChoice = existingChoices?.FirstOrDefault(f => f.FlightId == flightId && f.PassengerId == passenger.Id);
 
                     pm.FlightMeals.Add(new FlightMealSelectionVM
                     {

@@ -1,5 +1,5 @@
 
-const sessionDurationSeconds = 6 * 60; // Voor test: 6 minuten
+const sessionDurationSeconds = 30 * 60;
 let remainingTime = parseInt(sessionStorage.getItem("remainingTime")) || sessionDurationSeconds;
 let timerInterval;
 
@@ -9,32 +9,7 @@ function formatTime(seconds) {
     return `${m}:${s}`;
 }
 
-/* function updateTimerUI(timerDisplay, modalCountdown, wrapper) {
-    if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        sessionStorage.setItem("remainingTime", "0");
-        modalCountdown.textContent = "00:00";
-        bootstrap.Modal.getOrCreateInstance(document.getElementById("sessionModal")).show();
-        return;
-    }
-
-    timerDisplay.textContent = formatTime(remainingTime);
-    modalCountdown.textContent = formatTime(remainingTime);
-
-    if (remainingTime <= 60) {
-        wrapper.classList.remove('alert-warning');
-        wrapper.classList.add('alert-danger');
-    }
-
-    if (remainingTime === 5 * 60) {
-        bootstrap.Modal.getOrCreateInstance(document.getElementById("sessionModal")).show();
-    }
-
-    remainingTime--;
-    sessionStorage.setItem("remainingTime", remainingTime.toString());
-} */
-
-    function updateTimerUI(timerDisplay, modalCountdown, wrapper) {
+function updateTimerUI(timerDisplay, modalCountdown, wrapper) {
     if (remainingTime <= 0) {
         clearInterval(timerInterval);
         modalCountdown.textContent = "00:00";
@@ -67,7 +42,7 @@ function formatTime(seconds) {
         bootstrap.Modal.getOrCreateInstance(document.getElementById("sessionModal")).show();
     }
 
-    // ✅ Sla bij elke tik op in sessionStorage
+    // Sla bij elke tik op in sessionStorage
     sessionStorage.setItem("remainingTime", remainingTime.toString());
 
     remainingTime--;
@@ -100,7 +75,7 @@ function startSessionTimer() {
             display.textContent = formatTime(remainingTime);
             modalCountdown.textContent = formatTime(remainingTime);
 
-            
+
             wrapper.classList.remove('alert-danger');
             wrapper.classList.add('alert-warning');
             timerInterval = setInterval(() => updateTimerUI(display, modalCountdown, wrapper), 1000);

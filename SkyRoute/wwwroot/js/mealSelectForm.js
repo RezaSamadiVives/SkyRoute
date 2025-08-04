@@ -13,6 +13,16 @@ document.addEventListener("DOMContentLoaded", function () {
         requiredMap[pid].add(fid);
     });
 
+    mealInputs.forEach(input => {
+        if (input.checked) {
+            input.closest(".form-check").classList.add("selected");
+            const pid = input.dataset.passengerId;
+            const fid = input.dataset.flightId;
+            if (!selectedMap[pid]) selectedMap[pid] = new Set();
+            selectedMap[pid].add(parseInt(fid));
+        }
+    });
+
     function checkIfAllSelected() {
         for (let pid in requiredMap) {
             const requiredFlights = requiredMap[pid];
