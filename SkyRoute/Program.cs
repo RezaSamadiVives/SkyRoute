@@ -49,6 +49,8 @@ builder.Services.AddScoped<IPassengerValidator, PassengerValidator>();
 builder.Services.AddScoped<IMealOptionSelectionService, MealOptionSelectionService>();
 builder.Services.AddScoped<IMealOptionViewModelBuilder, MealOptionViewModelBuilder>();
 
+builder.Services.AddScoped<IFlightSearchHandler,FlightSearchHandler>();
+
 builder.Services.AddControllersWithViews();
 
 // Automapper

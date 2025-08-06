@@ -21,6 +21,7 @@
         </div>
         <div class="card-body">
             <p><strong>Vluchten:</strong> @string.Join(", ", Model.OutboundFlights.Flights)</p>
+            <p><strong>Vluchten:</strong> @Model.FlightSearchSessionVM?.FromCity - @Model.FlightSearchSessionVM?.ToCity</p>
             <p><strong>Prijs:</strong> €@Model.OutboundFlights.TotalPrice.ToString("0.00")</p>
         </div>
     </div>
@@ -37,6 +38,7 @@
         </div>
         <div class="card-body">
             <p><strong>Vluchten:</strong> @string.Join(", ", Model.RetourFlights.Flights)</p>
+              <p><strong>Vluchten:</strong> @Model.FlightSearchSessionVM?.ToCity - @Model.FlightSearchSessionVM?.FromCity</p>
             <p><strong>Prijs:</strong> €@Model.RetourFlights.TotalPrice.ToString("0.00")</p>
         </div>
     </div>

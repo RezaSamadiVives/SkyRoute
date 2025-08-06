@@ -38,12 +38,12 @@ namespace SkyRoute.ViewModels
         {
             if (SelectedTripType == TripType.Retour && ReturnDate == null)
             {
-                yield return new ValidationResult("Retourdatum is verplicht bij een retourreis.", new[] { nameof(ReturnDate) });
+                yield return new ValidationResult("Retourdatum is verplicht bij een retourreis.", [nameof(ReturnDate)]);
             }
 
             if (ReturnDate != null && ReturnDate < DepartureDate)
             {
-                yield return new ValidationResult("Retourdatum moet na vertrekdatum zijn.", new[] { nameof(ReturnDate) });
+                yield return new ValidationResult("Retourdatum moet na vertrekdatum zijn.", [nameof(ReturnDate)]);
             }
         }
     }

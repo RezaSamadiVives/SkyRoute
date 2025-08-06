@@ -15,7 +15,7 @@
 
 
     <div class="container py-5">
-        @await Html.PartialAsync("_BookingWizard", "vlucht") 
+        @await Html.PartialAsync("_BookingWizard", "vlucht")
         @await Component.InvokeAsync("FlightSearchForm", new
         {
             formController = "FlightSearch",
@@ -23,6 +23,19 @@
                 model = Model.FormModel
                 })
         <hr />
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
         <h2 class="mb-4">Heenvluchten</h2>
 
         @if (Model.OutboundFlights is not null && Model.OutboundFlights.Any())
@@ -30,11 +43,13 @@
             <div class="row g-4">
                 @foreach (var segment in Model.OutboundFlights)
                 {
+                    var isSelected = segment.SegmentId.ToString().Equals(Model.SelectedOutboundSegment.ToString());
                     @await Html.PartialAsync("_FlightSeachResultPartial", segment, new ViewDataDictionary(ViewData)
                     {
                         { "TripType", "outbound" },
-                        { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() }
-                    })
+                        { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() },
+                        {"selected", isSelected}
+                        })
                         }
             </div>
         }
@@ -51,10 +66,12 @@
             <div class="row g-4">
                 @foreach (var segment in Model.ReturnFlights)
                 {
+                    var isSelected = segment.SegmentId.ToString().Equals(Model.SelectedRetourSegment.ToString());
                     @await Html.PartialAsync("_FlightSeachResultPartial", segment, new ViewDataDictionary(ViewData)
                     {
                         { "TripType", "return" },
-                        { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() }
+                        { "SelectedTripClass", Model.FormModel?.SelectedTripClass.ToString()?.ToLower() },
+                         {"selected", isSelected}
                     })
 
                         }
