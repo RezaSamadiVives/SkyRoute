@@ -123,4 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
     });
+
+
+    updateBookButtonState();
 });
