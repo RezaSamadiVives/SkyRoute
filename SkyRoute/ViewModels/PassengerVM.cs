@@ -27,6 +27,17 @@ namespace SkyRoute.ViewModels
         public bool IsFellowPassenger { get; set; }
         public string? UserId { get; set; }
 
+        public bool IsAdult
+        {
+            get
+            {
+                var today = DateTime.Today;
+                var age = today.Year - Birthday.Year;
+                if (Birthday.Date > today.AddYears(-age)) age--;
+                return age >= 18;
+            }
+        }
+
         public static ValidationResult? ValidateBirthday(DateTime? birthday, ValidationContext context)
         {
             if (!birthday.HasValue)

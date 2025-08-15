@@ -39,7 +39,7 @@
 
         <li class="step @(currentStep == "overzicht" ? "active" : (!hasMeals ? "disabled" : ""))">
             @if (hasMeals) {
-                <a asp-controller="ShoppingCart" asp-action="Index">Overzicht</a>
+                <a asp-controller="OrderSummary" asp-action="Index">Overzicht</a>
             } else {
                 <span>Overzicht</span>
             }

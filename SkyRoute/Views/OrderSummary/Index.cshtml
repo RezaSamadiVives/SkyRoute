@@ -1,0 +1,27 @@
+@model SkyRoute.ViewModels.OrderSummaryVM
+
+@{
+    ViewData["Title"] = "Overzicht";
+}
+
+<main>
+    @Html.AntiForgeryToken()
+    <div class="container py-5">
+      @await Html.PartialAsync("_BookingWizard", "overzicht") 
+    </div>
+    <h2 class="mb-4">Heenvluchten</h2>
+    @if (Model.OutboundFlight != null)
+    {
+        <div class="row g-4">
+
+            @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.OutboundFlight, new ViewDataDictionary(ViewData)
+            {
+                { "TripType", "outbound" },
+                { "SelectedTripClass", Model.TripClass.ToString().ToLower() },
+                { "selected", false},
+                {"readOnly", true}
+            })
+
+    </div>
+        }
+</main>

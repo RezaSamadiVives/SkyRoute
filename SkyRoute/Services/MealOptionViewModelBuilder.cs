@@ -19,13 +19,13 @@ namespace SkyRoute.Services
 
             if (shoppingCart?.OutboundFlights?.Flights?.Count > 0)
             {
-                var outbound = await GeneratePassengerMealChoices(shoppingCart,shoppingCart.Passengers, shoppingCart.OutboundFlights.Flights, TripType.Enkel);
+                var outbound = await GeneratePassengerMealChoices(shoppingCart,TripType.Enkel);
                 vm.PassengerMeals.AddRange(outbound);
             }
 
             if (shoppingCart?.RetourFlights?.Flights?.Count > 0)
             {
-                var retour = await GeneratePassengerMealChoices(shoppingCart,shoppingCart.Passengers, shoppingCart.RetourFlights.Flights, TripType.Retour);
+                var retour = await GeneratePassengerMealChoices(shoppingCart, TripType.Retour);
                 vm.PassengerMeals.AddRange(retour);
             }
 
@@ -37,13 +37,18 @@ namespace SkyRoute.Services
 
 
         private async Task<List<PassengerMealChoiceVM>> GeneratePassengerMealChoices(ShoppingCartVM shoppingCartVM,
-            List<PassengerVM> passengers,
-            List<int> flightIds,
             TripType tripType)
         {
             var list = new List<PassengerMealChoiceVM>();
             var existingChoices = shoppingCartVM.MealChoicePassengerSessions;
+            var passengers = shoppingCartVM.Passengers;
+            var flightIds = tripType == TripType.Enkel ? shoppingCartVM?.OutboundFlights?.Flights : shoppingCartVM?.RetourFlights?.Flights;
 
+            if (passengers == null || flightIds == null)
+            {
+                return list;
+            }
+            
             foreach (var passenger in passengers)
             {
                 var pm = new PassengerMealChoiceVM { Passenger = passenger };

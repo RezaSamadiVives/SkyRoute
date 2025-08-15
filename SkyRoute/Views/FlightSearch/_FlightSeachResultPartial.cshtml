@@ -3,40 +3,47 @@
 @{
     var tripType = ViewData["TripType"]?.ToString(); // "outbound" of "return"
     var selectedTripClass = ViewData["SelectedTripClass"]?.ToString(); // economy / business
-    var isSelected = ViewData["selected"];
+    var isSelected = Convert.ToBoolean(ViewData["selected"]);
+    var isReadOnly = Convert.ToBoolean(ViewData["readOnly"]);
 }
 
 <div class="col-12">
     <div class="card shadow-sm animate-fade-in @(tripType == "return" ? "delay-1" : "")">
-        <div class="card-body @(Convert.ToBoolean(isSelected) ? "selected" : "")"  data-flight-type="@tripType" data-segment-id="@Model.SegmentId">
+        <div class="card-body @(Convert.ToBoolean(isSelected) ? "selected" : "")" data-flight-type="@tripType"
+            data-segment-id="@Model.SegmentId">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title mb-1">
                         @Model.Flights.First().FromCity.Name → @Model.Flights.Last().ToCity.Name
                     </h5>
                     <p class="card-text text-muted mb-0">
-                        Totale duur: <strong class="card-title">@Model.TotalDuration.Days d @Model.TotalDuration.Hours u @Model.TotalDuration.Minutes min</strong>
+                        Totale duur: <strong class="card-title">@Model.TotalDuration.Days d @Model.TotalDuration.Hours u
+                            @Model.TotalDuration.Minutes min</strong>
                         | Prijs: <strong class="card-title">€@Model.TotalPrice</strong>
                     </p>
                     <p class="card-text text-muted mb-0">
-                        Vertrekdatum: <strong class="card-title">@Model.Flights.First().FlightDate.ToString("M") @Model.Flights.First().DepartureTime</strong>
-                        | Aankomstdatum: <strong class="card-title">@Model.Flights.Last().ArrivalDate.ToString("M") @Model.Flights.Last().ArrivalTime</strong>
+                        Vertrekdatum: <strong class="card-title">@Model.Flights.First().FlightDate.ToString("M")
+                            @Model.Flights.First().DepartureTime</strong>
+                        | Aankomstdatum: <strong class="card-title">@Model.Flights.Last().ArrivalDate.ToString("M")
+                            @Model.Flights.Last().ArrivalTime</strong>
                     </p>
                 </div>
-                <div>
-                    <input class="form-check-input" type="checkbox" 
-                    data-flight-type="@tripType" id="check_@Model.SegmentId" name="check"  
-                    disabled @(Convert.ToBoolean(isSelected) ? "checked" : "")  />
-                </div>
-                <button class="btn btn-outline-primary select-flight-btn" 
-                data-flight-type="@tripType" 
-                data-segment-id="@Model.SegmentId"
-                @(Convert.ToBoolean(isSelected) ? "disabled" : "")>
-                    Selecteer @(tripType == "return" ? "terugvlucht" : "vlucht")
-                </button>
+                @if (!isReadOnly)
+                {
+                    <div>
+                        <input class="form-check-input" type="checkbox" data-flight-type="@tripType"
+                            id="check_@Model.SegmentId" name="check" disabled @(isSelected ? "checked" : "") />
+                    </div>
+                    <button class="btn btn-outline-primary select-flight-btn" data-flight-type="@tripType"
+                        data-segment-id="@Model.SegmentId" @(isSelected ? "disabled" : "")>
+                        Selecteer @(tripType == "return" ? "terugvlucht" : "vlucht")
+                    </button>
+                }
+
             </div>
 
-            <button class="btn btn-link text-decoration-none mt-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#segmentDetails-@tripType-@Model.SegmentId">
+            <button class="btn btn-link text-decoration-none mt-3 px-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#segmentDetails-@tripType-@Model.SegmentId">
                 Details tonen
             </button>
 
