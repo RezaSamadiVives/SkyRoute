@@ -24,6 +24,7 @@
                 };
                 
                 viewData["CanRemove"] = Model.Passengers.Count > 1;
+                viewData["readOnly"] = false;
                 @await Html.PartialAsync("_PassengerFormPartial", Model.Passengers[i], viewData)
             }
 

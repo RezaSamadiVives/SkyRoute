@@ -57,6 +57,9 @@ namespace SkyRoute.Controllers
                 model.ReturnFlight = _mapper.Map<FlightSegmentGroupVM>(flightSegmentGroupRetour);
             }
 
+            // passagiers ophalen
+            model.PassengerListVM.Passengers = shoppingCartVM.Passengers;
+
             return View(model);
         }
     }

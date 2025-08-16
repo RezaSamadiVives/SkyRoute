@@ -1,8 +1,9 @@
 @model SkyRoute.ViewModels.PassengerVM
 @{
     var canRemove = ViewData["CanRemove"] as bool? ?? false;
+    var isReadOnly = ViewData["readOnly"] as bool? ?? false;
 }
-<div class="booking-form bg-white text-dark p-4 rounded shadow-lg  mb-4 animate-fade-in" style="max-width: 850px;">
+<div class="booking-form bg-white text-dark p-4 rounded shadow-lg mb-4 animate-fade-in" style="max-width: 850px;">
     <h5 class="mb-4"><i class="bi bi-person-badge"></i> Passagier gegevens</h5>
 
     <div class="row g-3">
@@ -11,7 +12,8 @@
             <label asp-for="FirstName" class="form-label">Voornaam</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                <input asp-for="FirstName" class="form-control" />
+                <input asp-for="FirstName" class="form-control"
+                       readonly="@(isReadOnly ? "readonly" : null)" />
             </div>
             <span asp-validation-for="FirstName" class="text-danger"></span>
         </div>
@@ -21,7 +23,8 @@
             <label asp-for="MiddelName" class="form-label">Tussenvoegsel</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-three-dots"></i></span>
-                <input asp-for="MiddelName" class="form-control" />
+                <input asp-for="MiddelName" class="form-control"
+                       readonly="@(isReadOnly ? "readonly" : null)" />
             </div>
             <span asp-validation-for="MiddelName" class="text-danger"></span>
         </div>
@@ -31,7 +34,8 @@
             <label asp-for="LastName" class="form-label">Achternaam</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
-                <input asp-for="LastName" class="form-control" />
+                <input asp-for="LastName" class="form-control"
+                       readonly="@(isReadOnly ? "readonly" : null)" />
             </div>
             <span asp-validation-for="LastName" class="text-danger"></span>
         </div>
@@ -46,8 +50,12 @@
                 @{
                     var birthday = Model.Birthday == DateTime.MinValue ? DateTime.Today : Model.Birthday;
                 }
-                <input asp-for="Birthday" class="form-control" type="text" max="@DateTime.Today.ToString("dd-MM-yyyy")"
-                    value="@birthday.ToString("dd-MM-yyyy")"  />
+                <input asp-for="Birthday"
+                       class="form-control"
+                       type="text"
+                       max="@DateTime.Today.ToString("dd-MM-yyyy")"
+                       value="@birthday.ToString("dd-MM-yyyy")"
+                       readonly="@(isReadOnly ? "readonly" : null)" />
             </div>
             <span asp-validation-for="Birthday" class="text-danger"></span>
         </div>
@@ -55,22 +63,24 @@
         <!-- Checkbox: meereizend -->
         <div class="col-md-6 d-flex align-items-center">
             <div class="form-check mt-4">
-                <input asp-for="IsFellowPassenger" class="form-check-input" type="checkbox" />
+                <input asp-for="IsFellowPassenger"
+                       class="form-check-input"
+                       type="checkbox"
+                       disabled="@(isReadOnly ? "disabled" : null)" />
                 <label asp-for="IsFellowPassenger" class="form-check-label">
                     <i class="bi bi-people"></i> Meereizende passagier
                 </label>
             </div>
         </div>
-        @if (canRemove)
+
+        @if (canRemove && !isReadOnly)
         {
             <div class="text-end">
                 <button type="submit" name="action" value="remove-@ViewData.TemplateInfo.HtmlFieldPrefix"
-                    class="btn btn-danger btn-sm">
+                        class="btn btn-danger btn-sm">
                     <i class="bi bi-trash"></i> Verwijderen
                 </button>
             </div>
         }
-
-
     </div>
 </div>

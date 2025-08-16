@@ -6,7 +6,7 @@ namespace SkyRoute.ViewModels
     {
         public FlightSegmentGroupVM? OutboundFlight { get; set; }
         public FlightSegmentGroupVM? ReturnFlight { get; set; }
-        public PassengerListVM? PassengerListVM { get; set; }
+        public PassengerListVM PassengerListVM { get; set; } = new PassengerListVM();
         public MealSelectionFormVM? MealSelection { get; set; }
 
         public TripClass TripClass { get; set; }

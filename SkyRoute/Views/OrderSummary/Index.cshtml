@@ -7,21 +7,59 @@
 <main>
     @Html.AntiForgeryToken()
     <div class="container py-5">
-      @await Html.PartialAsync("_BookingWizard", "overzicht") 
+        @await Html.PartialAsync("_BookingWizard", "overzicht")
     </div>
     <h2 class="mb-4">Heenvluchten</h2>
     @if (Model.OutboundFlight != null)
     {
         <div class="row g-4">
 
-            @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.OutboundFlight, new ViewDataDictionary(ViewData)
-            {
+            @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.OutboundFlight, new
+            ViewDataDictionary(ViewData)
+                {
                 { "TripType", "outbound" },
                 { "SelectedTripClass", Model.TripClass.ToString().ToLower() },
                 { "selected", false},
-                {"readOnly", true}
+                { "readOnly", true}
             })
 
     </div>
         }
+
+    @if (Model.ReturnFlight != null)
+    {
+        <h2 class="mb-4">Retourluchten</h2>
+        <div class="row g-4">
+
+            @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.ReturnFlight, new
+            ViewDataDictionary(ViewData)
+                {
+                { "TripType", "retour" },
+                { "SelectedTripClass", Model.TripClass.ToString().ToLower() },
+                { "selected", false},
+                { "readOnly", true}
+            })
+
+    </div>
+        }
+
+    @if (Model.PassengerListVM.Passengers.Any())
+    {
+        <div class="row g-4">
+            <h2 class="mb-4">Passagiers</h2>
+            @for (int i = 0; i < Model.PassengerListVM.Passengers.Count; i++)
+            {
+                var viewData = new ViewDataDictionary(ViewData)
+                {
+                    TemplateInfo = { HtmlFieldPrefix = $"Passengers[{i}]" },
+                };
+
+                viewData["CanRemove"] = false;
+                viewData["readOnly"] = false;
+                @await Html.PartialAsync("~/Views/Passengers/_PassengerFormPartial.cshtml", Model.PassengerListVM.Passengers[i],
+                viewData)
+                }
+    </div>
+        }
+
 </main>
