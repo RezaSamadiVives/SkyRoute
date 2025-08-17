@@ -9,8 +9,8 @@
     <div class="container py-5">
         @await Html.PartialAsync("_BookingWizard", "overzicht")
     </div>
-    <h2 class="mb-4">Heenvluchten</h2>
-    @if (Model.OutboundFlight != null)
+    <h2 class="text-primary mb-4">Heenvluchten</h2>
+    @if (Model.OutboundFlight != null && Model.OutboundFlight.Flights.Any())
     {
         <div class="row g-4">
 
@@ -26,9 +26,9 @@
     </div>
         }
 
-    @if (Model.ReturnFlight != null)
+    @if (Model.ReturnFlight != null && Model.ReturnFlight.Flights.Any())
     {
-        <h2 class="mb-4">Retourluchten</h2>
+        <h2 class="text-primary mb-4">Retourluchten</h2>
         <div class="row g-4">
 
             @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.ReturnFlight, new
@@ -46,7 +46,7 @@
     @if (Model.PassengerListVM.Passengers.Any())
     {
         <div class="row g-4">
-            <h2 class="mb-4">Passagiers</h2>
+            <h2 class="text-primary mb-4">Passagiers</h2>
             @for (int i = 0; i < Model.PassengerListVM.Passengers.Count; i++)
             {
                 var viewData = new ViewDataDictionary(ViewData)
@@ -55,7 +55,7 @@
                 };
 
                 viewData["CanRemove"] = false;
-                viewData["readOnly"] = false;
+                viewData["readOnly"] = true;
                 @await Html.PartialAsync("~/Views/Passengers/_PassengerFormPartial.cshtml", Model.PassengerListVM.Passengers[i],
                 viewData)
                 }
