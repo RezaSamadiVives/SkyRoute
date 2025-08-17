@@ -9,10 +9,11 @@
     <div class="container py-5">
         @await Html.PartialAsync("_BookingWizard", "overzicht")
     </div>
-    <h2 class="text-primary mb-4">Heenvluchten</h2>
+
     @if (Model.OutboundFlight != null && Model.OutboundFlight.Flights.Any())
     {
-        <div class="row g-4">
+        <h2 class="text-primary mb-4">Heenvluchten</h2>
+        <div class="row g-4 mb-4">
 
             @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.OutboundFlight, new
             ViewDataDictionary(ViewData)
@@ -29,7 +30,7 @@
     @if (Model.ReturnFlight != null && Model.ReturnFlight.Flights.Any())
     {
         <h2 class="text-primary mb-4">Retourluchten</h2>
-        <div class="row g-4">
+        <div class="row g-4 mb-4">
 
             @await Html.PartialAsync("~/Views/FlightSearch/_FlightSeachResultPartial.cshtml", Model.ReturnFlight, new
             ViewDataDictionary(ViewData)
@@ -45,21 +46,25 @@
 
     @if (Model.PassengerListVM.Passengers.Any())
     {
-        <div class="row g-4">
-            <h2 class="text-primary mb-4">Passagiers</h2>
+        <h2 class="text-primary mb-4">Passagiers</h2>
+        <div class="row g-4 mb-4">
+
             @for (int i = 0; i < Model.PassengerListVM.Passengers.Count; i++)
             {
-                var viewData = new ViewDataDictionary(ViewData)
-                {
-                    TemplateInfo = { HtmlFieldPrefix = $"Passengers[{i}]" },
-                };
+                @await Html.PartialAsync("~/Views/Passengers/_PassengerViewPartial.cshtml", Model.PassengerListVM.Passengers[i])
+            }
+        </div>
+    }
 
-                viewData["CanRemove"] = false;
-                viewData["readOnly"] = true;
-                @await Html.PartialAsync("~/Views/Passengers/_PassengerFormPartial.cshtml", Model.PassengerListVM.Passengers[i],
-                viewData)
-                }
-    </div>
-        }
+    @if (Model.MealsSelection.Count > 0)
+    {
+        <h2 class="text-primary mb-4">Maaltijden</h2>
+        <div class="row g-4 mb-4">
+            @for (int i = 0; i < Model.MealsSelection.Count; i++)
+            {
+                @await Html.PartialAsync("~/Views/MealOption/_flightMealSelectionView.cshtml", Model.MealsSelection[i])
+            }
+        </div>
+    }
 
 </main>

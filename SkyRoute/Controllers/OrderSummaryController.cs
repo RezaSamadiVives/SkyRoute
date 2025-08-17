@@ -13,6 +13,7 @@ namespace SkyRoute.Controllers
     public class OrderSummaryController(
         IShoppingcartService _shoppingcartService,
          IFlightSearchService _flightSearchService,
+          IMealOptionViewModelBuilder _viewModelBuilder,
          IMapper _mapper) : Controller
     {
         [HttpGet]
@@ -59,6 +60,9 @@ namespace SkyRoute.Controllers
 
             // passagiers ophalen
             model.PassengerListVM.Passengers = shoppingCartVM.Passengers;
+
+            // maaltijden ophalen
+            model.MealsSelection = await _viewModelBuilder.GetSelectedMealsAsync(HttpContext);
 
             return View(model);
         }

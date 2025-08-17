@@ -1,0 +1,25 @@
+@model SkyRoute.ViewModels.PassengerVM
+
+<div class="col-12">
+    <div class="card shadow-sm animate-fade-in">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-1">
+                        @Model.FirstName @Model.MiddelName @Model.LastName
+                    </h5>
+                    <p class="card-text text-muted mb-0">
+                        Geboortedatum: <strong class="card-title">@Model.Birthday.ToString("dd-MM-yyyy")</strong>
+                    </p>
+                    <p class="card-text text-muted mb-0">
+                        Meereizende passagier:@if(Model.IsFellowPassenger){
+                            <strong class="card-title">Ja</strong>
+                            } else{
+                                <strong class="card-title">Hoofdpassagier</strong>
+                            }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
