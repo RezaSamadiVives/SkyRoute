@@ -11,13 +11,23 @@ using SkyRoute.ViewModels;
 namespace SkyRoute.Controllers
 {
     [Authorize]
-    public class PaymentController : Controller
+    public class PaymentController(IShoppingcartService _shoppingcartService)  : Controller
     {
         [HttpGet]
         public IActionResult Index()
         {
+            var cart = _shoppingcartService.GetShoppingCart(HttpContext.Session);
+            if (cart == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
-            return View();
+            var vm = new PaymentVM
+            {
+                Amount = cart.Total
+            };
+
+            return View(vm);
         }
         
     }
