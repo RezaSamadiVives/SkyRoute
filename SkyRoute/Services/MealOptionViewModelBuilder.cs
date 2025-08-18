@@ -1,5 +1,4 @@
 using AutoMapper;
-using SkyRoute.Domains.Entities;
 using SkyRoute.Helpers;
 using SkyRoute.Services.Interfaces;
 using SkyRoute.ViewModels;

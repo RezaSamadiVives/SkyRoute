@@ -23,7 +23,8 @@ namespace SkyRoute.Controllers
 
             var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session);
 
-            if (shoppingCartVM == null) {
+            if (shoppingCartVM == null)
+            {
                 return View(model);
             }
 
@@ -64,7 +65,28 @@ namespace SkyRoute.Controllers
             // maaltijden ophalen
             model.MealsSelection = await _viewModelBuilder.GetSelectedMealsAsync(HttpContext);
 
+            model.IsConfirmed = shoppingCartVM.IsConfirmed;
+
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ConfirmBooking()
+        {
+            var shoppingCartVM = _shoppingcartService.GetShoppingCart(HttpContext.Session);
+
+            if (shoppingCartVM == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            shoppingCartVM.IsConfirmed = true;
+            _shoppingcartService.SetShoppingObject(shoppingCartVM, HttpContext.Session);
+
+            // ... je booking logica ...
+            return RedirectToAction("Index", "ShoppingCart");
+        }
+
     }
 }

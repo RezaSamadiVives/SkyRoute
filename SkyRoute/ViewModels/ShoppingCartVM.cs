@@ -7,6 +7,7 @@
         public List<PassengerVM> Passengers { get; set; } = [];
         public List<MealChoicePassengerSession> MealChoicePassengerSessions { get; set; } = [];
         public FlightSearchSessionVM? FlightSearchSessionVM { get; set; }
+        public bool IsConfirmed { get; set; }
         public decimal Total
         {
             get

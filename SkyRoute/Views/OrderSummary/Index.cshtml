@@ -5,7 +5,6 @@
 }
 
 <main>
-    @Html.AntiForgeryToken()
     <div class="container py-5">
         @await Html.PartialAsync("_BookingWizard", "overzicht")
     </div>
@@ -66,5 +65,19 @@
             }
         </div>
     }
-
+    @if (Model.IsConfirmed)
+    {
+        <a class="btn btn-primary" href="@Url.Action("Index", "ShoppingCart")">
+            Verder naar betalen
+        </a>
+    }
+    else
+    {
+        <form method="post" asp-controller="OrderSummary" asp-action="ConfirmBooking">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary">
+                Bevestig boeking en verder met betalen
+            </button>
+        </form>
+    }
 </main>

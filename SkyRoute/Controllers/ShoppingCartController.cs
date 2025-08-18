@@ -24,6 +24,12 @@ namespace SkyRoute.Controllers
         }
 
         [HttpPost]
+        public IActionResult Buy()
+        {
+            return RedirectToAction("Index","Payment");
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult RemoveSegment(string segment)
         {
