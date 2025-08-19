@@ -84,7 +84,7 @@ namespace SkyRoute.Controllers
             shoppingCartVM.IsConfirmed = true;
             _shoppingcartService.SetShoppingObject(shoppingCartVM, HttpContext.Session);
 
-            // ... je booking logica ...
+            
             return RedirectToAction("Index", "ShoppingCart");
         }
 
