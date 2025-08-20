@@ -16,8 +16,10 @@ namespace SkyRoute.ViewModels
         public string Bank { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Bedrag is verplicht")]
-        [Range(0.01, 1000000, ErrorMessage = "Bedrag moet positief zijn")]
+        [Range(001, 1000000, ErrorMessage = "Bedrag moet positief zijn")]
         public decimal Amount { get; set; }
+
+        public bool BankDebitAllowed { get; set; }
 
     }
 }
