@@ -77,6 +77,13 @@ namespace SkyRoute.Domains.Data
                 .WithMany()
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+            .HasOne(b => b.User)
+            .WithMany()
+            .HasForeignKey(b => b.UserId)
+            .IsRequired();
+            
             base.OnModelCreating(modelBuilder);
         }
     }
