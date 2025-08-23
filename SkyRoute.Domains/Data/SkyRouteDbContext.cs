@@ -14,6 +14,8 @@ namespace SkyRoute.Domains.Data
         public DbSet<MealOption> MealOptions { get; set; }
         public DbSet<FlightMealOption> FlightMealOptions { get; set; }
         public DbSet<Passenger> Passengers { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,7 +73,7 @@ namespace SkyRoute.Domains.Data
                 .HasOne(fm => fm.MealOption)
                 .WithMany(m => m.FlightMeals)
                 .HasForeignKey(fm => fm.MealOptionId);
-                
+
             modelBuilder.Entity<Passenger>()
                 .HasOne(p => p.User)
                 .WithMany()
@@ -79,11 +81,44 @@ namespace SkyRoute.Domains.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Booking>()
-            .HasOne(b => b.User)
-            .WithMany()
-            .HasForeignKey(b => b.UserId)
-            .IsRequired();
-            
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Passenger)
+                .WithMany(p => p.Tickets)
+                .HasForeignKey(t => t.PassengerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Booking)
+                .WithMany(b => b.Tickets)
+                .HasForeignKey(t => t.BookingId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Seat)
+                .WithMany()
+                .HasForeignKey(t => t.SeatId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.MealOption)
+                .WithMany()
+                .HasForeignKey(t => t.MealOptionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Flight)
+                .WithMany(f => f.Tickets)
+                .HasForeignKey(t => t.FlightId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

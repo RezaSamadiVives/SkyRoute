@@ -14,8 +14,8 @@ namespace SkyRoute.Domains.Entities
         public bool IsFellowPassenger { get; set; }
 
         public required string UserId { get; set; }
-        public virtual IdentityUser User { get; set; }= null!;
+        public virtual IdentityUser User { get; set; } = null!;
 
-
+        public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }

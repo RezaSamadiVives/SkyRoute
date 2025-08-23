@@ -34,5 +34,7 @@
         } = null!;
         public virtual ICollection<Seat> Seats { get; set; } = [];
         public virtual ICollection<FlightMealOption> MealOptions { get; set; } = [];
+        public virtual ICollection<Ticket> Tickets { get; set; } = [];
+
     }
 }
