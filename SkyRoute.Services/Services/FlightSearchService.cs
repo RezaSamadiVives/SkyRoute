@@ -5,9 +5,8 @@ using SkyRoute.Services.Interfaces;
 
 namespace SkyRoute.Services.Services
 {
-    public class FlightSearchService(IFlightSearchDAO flightSearchDAO) : BaseService<Flight>(flightSearchDAO), IFlightSearchService
+    public class FlightSearchService(IFlightSearchDAO _flightSearchDAO) : BaseService<Flight>(_flightSearchDAO), IFlightSearchService
     {
-        private readonly IFlightSearchDAO _flightSearchDAO = flightSearchDAO;
 
         public async Task<FlightSegmentGroup> GetAvailableFlights(Guid segmentId, bool isBusiness, int adultCount, int? kidCount)
         {

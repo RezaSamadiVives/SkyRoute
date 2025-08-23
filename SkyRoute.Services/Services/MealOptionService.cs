@@ -5,9 +5,8 @@ using SkyRoute.Services.Interfaces;
 
 namespace SkyRoute.Services.Services
 {
-    public class MealOptionService(IMealOptionDAO mealOptionDAO) : BaseService<MealOption>(mealOptionDAO), IMealOptionService
+    public class MealOptionService(IMealOptionDAO _mealOptionDAO) : BaseService<MealOption>(_mealOptionDAO), IMealOptionService
     {
-        private readonly IMealOptionDAO _mealOptionDAO = mealOptionDAO;
         public async Task<MealOptionList> GetMealOptionListAsync(int flightId)
         {
             return await _mealOptionDAO.GetMealOptionListAsync(flightId);

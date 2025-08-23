@@ -37,6 +37,7 @@ builder.Services.AddScoped(typeof(IService<>), typeof(BaseService<>));
 builder.Services.AddScoped<IFlightSearchDAO, FlightSearchDAO>();
 builder.Services.AddScoped<IFlightSearchService, FlightSearchService>();
 builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
+builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
 
 builder.Services.AddScoped<IMealOptionDAO, MealOptionDAO>();
 builder.Services.AddScoped<IMealOptionService, MealOptionService>();
@@ -45,6 +46,10 @@ builder.Services.AddScoped<IService<MealOption>, MealOptionService>();
 builder.Services.AddScoped<IPassengerService, PassengerService>();
 builder.Services.AddScoped<IShoppingcartService, ShoppingcartService>();
 builder.Services.AddScoped<IPassengerValidator, PassengerValidator>();
+
+builder.Services.AddScoped<IBookingDAO, BookingDAO>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IService<Booking>, BookingService>();
 
 builder.Services.AddScoped<IMealOptionSelectionService, MealOptionSelectionService>();
 builder.Services.AddScoped<IMealOptionViewModelBuilder, MealOptionViewModelBuilder>();
