@@ -5,6 +5,6 @@ namespace SkyRoute.Repositories.Interfaces
 {
     public interface IBookingDAO : IDAO<Booking>
     {
-        Task<Booking> GetBooking(BookingRequest bookingRequest);
+        Task<Booking> CreateBookingAsync(BookingRequest bookingRequest);
     }
 }

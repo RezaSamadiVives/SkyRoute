@@ -5,6 +5,6 @@ namespace SkyRoute.Services.Interfaces
 {
     public interface IBookingService: IService<Booking>
     {
-         Task<Booking> GetBooking(BookingRequest bookingRequest);
+         Task<Booking> CreateBookingAsync(BookingRequest bookingRequest);
     }
 }

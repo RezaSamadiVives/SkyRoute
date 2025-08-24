@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SkyRoute.Domains.Entities;
 using SkyRoute.Services;
+using SkyRoute.Services.Interfaces;
 using SkyRoute.ViewModels;
 
 namespace SkyRoute.Controllers
 {
-    public class FlightSearchController(IFlightSearchHandler _flightSearchHandler) : Controller
+    public class FlightSearchController(IFlightSearchHandler _flightSearchHandler,
+    IService<City> _cityService) : Controller
     {
 
         [HttpGet]
@@ -24,6 +27,33 @@ namespace SkyRoute.Controllers
                 ModelState.AddModelError("", $"Er is iets misgegaan bij het zoeken van vluchten. Error: {ex.Message}");
                 return View("FlightSearchResults", new FlightSearchResultVM());
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FlightSearchResults(FlightSearchFormVM model)
+        {
+             if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var toCity = await _cityService.FindByIdAsync(model.DestinationCity);
+            var fromCity = await _cityService.FindByIdAsync(model.DepartureCity);
+
+            return RedirectToAction("FlightSearchResults", "FlightSearch", new
+            {
+                fromCityId = model.DepartureCity,
+                fromCity = fromCity?.Name,
+                toCityId = model.DestinationCity,
+                toCity = toCity?.Name,
+                departureDate = model.DepartureDate,
+                returnDate = model.ReturnDate,
+                isRetour = model.IsRetour,
+                isBusiness = model.IsBusiness,
+                adultPassengers = model.AdultPassengers,
+                kidsPassengers = model.KidsPassengers
+            });
+            
         }
 
 

@@ -7,9 +7,9 @@ namespace SkyRoute.Services.Services
 {
     public class BookingService(IBookingDAO _bookingDAO) : BaseService<Booking>(_bookingDAO), IBookingService
     {
-        public async Task<Booking> GetBooking(BookingRequest bookingRequest)
+        public async Task<Booking> CreateBookingAsync(BookingRequest bookingRequest)
         {
-            return await _bookingDAO.GetBooking( bookingRequest );
+            return await _bookingDAO.CreateBookingAsync( bookingRequest );
         }
     }
 }
