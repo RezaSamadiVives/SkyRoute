@@ -316,3 +316,45 @@ select:focus {
 .ticket-card:hover {
     transform: scale(1.02);
 }
+
+.bookings-table {
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #f1f8ff;
+}
+
+.bookings-table th {
+    font-weight: bold;
+    text-align: center;
+}
+
+.bookings-table td, .bookings-table th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0.75rem;
+}
+
+.bookings-table tbody tr:hover {
+    background-color: #CCE4F5;
+    transform: scale(1.01);
+    transition: all 0.2s ease-in-out;
+}
+
+.bookings-table .badge {
+    font-size: 0.85rem;
+    padding: 0.45em 0.7em;
+    border-radius: 0.5rem;
+}
+
+.bookings-table button.btn-warning {
+    background-color: #FEBE12;
+    border-color: #FEBE12;
+    color: #fff;
+    font-weight: 500;
+}
+
+.bookings-table button.btn-warning:hover {
+    background-color: #ffc107;
+    border-color: #e0a800;
+    color: #fff;
+}

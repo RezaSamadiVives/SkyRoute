@@ -6,8 +6,10 @@ using Microsoft.Extensions.Options;
 using SkyRoute.Data;
 using SkyRoute.Domains.Data;
 using SkyRoute.Domains.Entities;
+using SkyRoute.Domains.Models;
 using SkyRoute.Repositories.Interfaces;
 using SkyRoute.Repositories.Repositories;
+using SkyRoute.Repositories.Services;
 using SkyRoute.Services;
 using SkyRoute.Services.Interfaces;
 using SkyRoute.Services.Services;
@@ -37,7 +39,6 @@ builder.Services.AddScoped(typeof(IService<>), typeof(BaseService<>));
 builder.Services.AddScoped<IFlightSearchDAO, FlightSearchDAO>();
 builder.Services.AddScoped<IFlightSearchService, FlightSearchService>();
 builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
-builder.Services.AddScoped<IService<Flight>, FlightSearchService>();
 
 builder.Services.AddScoped<IMealOptionDAO, MealOptionDAO>();
 builder.Services.AddScoped<IMealOptionService, MealOptionService>();
@@ -51,12 +52,21 @@ builder.Services.AddScoped<IBookingDAO, BookingDAO>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IService<Booking>, BookingService>();
 
+builder.Services.AddScoped<ITicketDAO, TicketDAO>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IService<Ticket>, TicketService>();
+
 builder.Services.AddScoped<IMealOptionSelectionService, MealOptionSelectionService>();
 builder.Services.AddScoped<IMealOptionViewModelBuilder, MealOptionViewModelBuilder>();
 
-builder.Services.AddScoped<IFlightSearchHandler,FlightSearchHandler>();
+builder.Services.AddScoped<IFlightSearchHandler, FlightSearchHandler>();
+builder.Services.AddScoped<ISeatAllocatorService, SeatAllocatorService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddControllersWithViews();
+
+
 
 // Automapper
 builder.Services.AddAutoMapper(typeof(Program));

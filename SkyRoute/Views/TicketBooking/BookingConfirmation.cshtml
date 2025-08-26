@@ -1,4 +1,4 @@
-@model SkyRoute.Domains.Entities.Booking
+@model SkyRoute.ViewModels.BookingVM
 
 @{
     ViewData["Title"] = "Boekingsbevestiging";
@@ -7,7 +7,7 @@
 <div class="container mt-5">
     <div class="text-center mb-4">
         <h2 class="text-success">Boekingsbevestiging</h2>
-        <p>Bedankt voor je boeking! Hieronder vind je je tickets.</p>
+        <p>Bedankt voor je boeking!. Wij hebben jouw ticket(s) al per email naar je verzonden. Hieronder vind je je bookingsgegevens.</p>
     </div>
 
     <div class="card shadow-sm mb-4">
@@ -15,49 +15,11 @@
             <h4>Boekingsinformatie</h4>
             <p><strong>Referentie:</strong> @Model.Reference</p>
             <p><strong>Datum:</strong> @Model.BookingDate.ToString("dd-MM-yyyy HH:mm")</p>
-            @* <p><strong>Totaalprijs:</strong> € @Model.TotalPrice</p> *@
+            <p><strong>Status:</strong> @Model.Status</p>
         </div>
-    </div>
-
-    <div class="row">
-        @foreach (var ticket in Model.Tickets)
-        {
-            <div class="col-md-6 mb-4">
-                <div class="card border-0 shadow-lg ticket-card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">✈ Ticket – @ticket.Flight.FlightNumber</h5>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="fw-bold">Passagier</h6>
-                        <p>@ticket.Passenger.FirstName @ticket.Passenger.LastName</p>
-
-                        <h6 class="fw-bold">Vluchtgegevens</h6>
-                        <p>
-                            <strong>Vertrek:</strong> @ticket.Flight.FromCity.Name – 
-                            @ticket.Flight.DepartureTime.ToString("dd-MM-yyyy HH:mm") <br />
-                            <strong>Aankomst:</strong> @ticket.Flight.ToCity.Name – 
-                            @ticket.Flight.ArrivalTime.ToString("dd-MM-yyyy HH:mm")
-                        </p>
-
-                        <h6 class="fw-bold">Stoel</h6>
-                        <p>@ticket.Seat.SeatNumber (@(ticket.Seat.IsBusiness ? "Business" : "Economy"))</p>
-
-                        @if (ticket.MealOption != null)
-                        {
-                            <h6 class="fw-bold">Maaltijd</h6>
-                            <p>@ticket.MealOption.Name</p>
-                        }
-                    </div>
-                    <div class="card-footer text-muted small text-center">
-                        Boeking: @Model.Reference
-                    </div>
-                </div>
-            </div>
-        }
     </div>
 
     <div class="text-center mt-4">
         <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">Terug naar startpagina</a>
     </div>
 </div>
-

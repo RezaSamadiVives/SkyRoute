@@ -12,8 +12,8 @@ using SkyRoute.Domains.Data;
 namespace SkyRoute.Domains.Migrations
 {
     [DbContext(typeof(SkyRouteDbContext))]
-    [Migration("20250822162115_AddBookingAndTicket")]
-    partial class AddBookingAndTicket
+    [Migration("20250826142540_TripclassAndNoteBooking")]
+    partial class TripclassAndNoteBooking
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,9 @@ namespace SkyRoute.Domains.Migrations
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reference")
                         .IsRequired()
@@ -378,6 +381,9 @@ namespace SkyRoute.Domains.Migrations
 
                     b.Property<int>("FlightId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsBusiness")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MealOptionId")
                         .HasColumnType("int");

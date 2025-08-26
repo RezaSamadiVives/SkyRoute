@@ -22,16 +22,16 @@ namespace SkyRoute.Repositories.Repositories
                 .Include(f => f.Seats)
                 .Where(f => f.SegmentId == bookingRequest.SegmentIdOutbound).ToListAsync();
 
-                
+
 
                 if (outboundFlights.Count == 0)
                 {
                     throw new InvalidOperationException("Geen heenvluchten gevonden");
                 }
-                
+
                 List<Flight> retourFlights = [];
 
-                if (bookingRequest.SegmentIdRetour != null)
+                if (string.IsNullOrEmpty(bookingRequest.SegmentIdRetour.ToString()))
                 {
                     retourFlights = await _context.Flights
                     .Include(f => f.Seats)
@@ -53,7 +53,7 @@ namespace SkyRoute.Repositories.Repositories
                 await _context.SaveChangesAsync();
 
                 var alleFlights = outboundFlights.Concat(retourFlights).ToList();
-               var flightSeatsList = new List<(Flight, List<Seat>)>();
+                var flightSeatsList = new List<(Flight, List<Seat>)>();
 
                 foreach (var flight in alleFlights)
                 {
@@ -82,7 +82,8 @@ namespace SkyRoute.Repositories.Repositories
                             SeatId = seat.Id,
                             MealOptionId = mealChoice.MealOptionsId,
                             Price = bookingRequest.IsBusiness ? flight.PriceBusiness : flight.PriceEconomy,
-                            Status = TicketStatus.Confirmed
+                            Status = TicketStatus.Confirmed,
+                            IsBusiness = bookingRequest.IsBusiness
                         };
 
                         _context.Tickets.Add(ticket);
@@ -96,7 +97,73 @@ namespace SkyRoute.Repositories.Repositories
 
             }
 
-            catch (Exception)
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+
+        public async Task<List<Booking>> GetAllBookingAsyncByUser(string userId)
+        {
+            var bookings = await _context.Bookings
+                    .Where(b => b.UserId == userId)
+                    .Include(b => b.Tickets) 
+                        .ThenInclude(t => t.Passenger) 
+                    .Include(b => b.Tickets)
+                        .ThenInclude(t => t.Flight) 
+                            .ThenInclude(f => f.FromCity) 
+                    .Include(b => b.Tickets)
+                        .ThenInclude(t => t.Flight)
+                            .ThenInclude(f => f.ToCity) 
+                    .Include(b => b.Tickets)
+                        .ThenInclude(t => t.Seat) 
+                    .Include(b => b.Tickets)
+                        .ThenInclude(t => t.MealOption)
+                    .ToListAsync();
+
+            return bookings;
+
+        }
+
+
+        public async Task CancelBookingAsync(int bookingId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Tickets)
+                        .ThenInclude(t => t.Seat)
+                    .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+                if (booking == null)
+                {
+                    throw new InvalidOperationException("Booking niet gevonden.");
+                }
+
+                booking.Status = BookingStatus.cancelled;
+                _context.Bookings.Update(booking);
+
+                foreach (var ticket in booking.Tickets)
+                {
+                    ticket.Status = TicketStatus.cancelled;
+
+                    if (ticket.Seat != null)
+                    {
+                        ticket.Seat.IsAvailable = true;
+                        _context.Seats.Update(ticket.Seat);
+                    }
+
+                    _context.Tickets.Update(ticket);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
             {
                 await transaction.RollbackAsync();
                 throw;

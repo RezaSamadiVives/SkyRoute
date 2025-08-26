@@ -1,26 +1,26 @@
 using SkyRoute.Domains.Enums;
 
-namespace SkyRoute.Domains.Entities
+namespace SkyRoute.ViewModels
 {
-    public class Ticket
+    public class TicketVM
     {
         public int Id { get; set; }
 
         public int BookingId { get; set; }
-        public virtual Booking Booking { get; set; } = null!;
+        public virtual BookingVM Booking { get; set; } = null!;
 
         public int PassengerId { get; set; }
-        public virtual Passenger Passenger { get; set; } = null!;
+        public virtual PassengerVM Passenger { get; set; } = null!;
 
         public int FlightId { get; set; }
-        public virtual Flight Flight { get; set; } = null!;
+        public virtual FlightVM Flight { get; set; } = null!;
 
 
         public int SeatId { get; set; }
-        public virtual Seat Seat { get; set; } = null!;
+        public virtual SeatVM Seat { get; set; } = null!;
 
         public int MealOptionId { get; set; }
-        public virtual MealOption MealOption { get; set; } = null!;
+        public virtual MealOptionVM MealOption { get; set; } = null!;
 
         public DateTime BookingDate { get; set; } = DateTime.UtcNow;
         public decimal Price { get; set; }
@@ -28,6 +28,5 @@ namespace SkyRoute.Domains.Entities
         public bool IsBusiness { get; set; } = false;
 
         public TicketStatus Status { get; set; } = TicketStatus.Confirmed;
-
     }
 }

@@ -117,6 +117,10 @@ namespace SkyRoute.Domains.Data
                 .HasForeignKey(t => t.FlightId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Microsoft.AspNetCore.Identity.IdentityUser>(b =>
+              {
+                  b.ToTable("AspNetUsers");
+              });
 
 
             base.OnModelCreating(modelBuilder);

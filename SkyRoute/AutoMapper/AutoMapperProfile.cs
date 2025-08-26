@@ -21,8 +21,11 @@ namespace SkyRoute.AutoMapper
             CreateMap<FlightSearchResult, FlightSearchResultVM>();
             CreateMap<FlightSegmentGroup, FlightSegmentGroupVM>();
             CreateMap<Passenger, PassengerVM>();
+            CreateMap<Booking, BookingVM>();
+            CreateMap<Ticket, TicketVM>();
 
-        
+
+
         }
     }
 }

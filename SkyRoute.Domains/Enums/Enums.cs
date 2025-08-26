@@ -2,13 +2,19 @@ namespace SkyRoute.Domains.Enums
 {
     public enum TicketStatus
     {
-        Confirmed,
-        cancelled
+        Confirmed = 0,
+        cancelled = 1
     }
 
-       public enum BookingStatus
+    public enum BookingStatus
     {
-        Confirmed,
-        cancelled
+        Confirmed = 0,
+        cancelled = 1
+    }
+    
+    public enum TicketClass
+    {
+        Economy = 0,
+        Business = 1
     }
 }

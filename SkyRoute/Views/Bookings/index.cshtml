@@ -1,0 +1,76 @@
+
+
+ @model IEnumerable<SkyRoute.ViewModels.BookingVM>
+
+@{
+    ViewData["Title"] = "Mijn boekingen";
+}
+
+<div class="container mt-5">
+    <h2 class="text-primary mb-4">Mijn boekingen</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="table-responsive shadow-sm rounded overflow-hidden">
+        <table class="table bookings-table mb-0">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Referentie</th>
+                    <th>Boekingsdatum</th>
+                    <th>Vertrekstad</th>
+                    <th>Aankomststad</th>
+                    <th>Status</th>
+                    <th>Klasse</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model)
+                {
+                    var firstFlight = booking.Tickets.OrderBy(t => t.Flight.FlightDate).ThenBy(t => t.Flight.DepartureTime).FirstOrDefault();
+                    var lastFlight = booking.Tickets.OrderByDescending(t => t.Flight.ArrivalDate).ThenByDescending(t => t.Flight.ArrivalTime).FirstOrDefault();
+                    var travelClass = booking.Tickets.Any(t => t.IsBusiness) ? "Business" : "Economy";
+
+                    <tr class="bg-light align-middle">
+                        <td>@booking.Reference</td>
+                        <td>@booking.BookingDate.ToString("dd-MM-yyyy")</td>
+                        <td>@(firstFlight?.Flight?.FromCity?.Name ?? "Onbekend")</td>
+                        <td>@(lastFlight?.Flight?.ToCity?.Name ?? "Onbekend")</td>
+                        <td>
+                            @if (booking.Status == SkyRoute.Domains.Enums.BookingStatus.cancelled)
+                            {
+                                <span class="badge bg-danger">Geannuleerd</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Bevestigd</span>
+                            }
+                        </td>
+                        <td>@travelClass</td>
+                        <td>
+                            @if (firstFlight != null && firstFlight.Flight.FlightDate > DateTime.UtcNow.AddDays(7) && booking.Status != SkyRoute.Domains.Enums.BookingStatus.cancelled)
+                            {
+                                <form asp-action="CancelBooking" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@booking.Id" />
+                                    <button type="submit" class="btn btn-warning btn-sm">Annuleren</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Niet annuleerbaar</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

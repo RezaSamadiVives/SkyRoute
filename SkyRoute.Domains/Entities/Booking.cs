@@ -11,6 +11,7 @@ namespace SkyRoute.Domains.Entities
         public BookingStatus Status { get; set; } = BookingStatus.Confirmed;
         public required string UserId { get; set; }
         public virtual IdentityUser User { get; set; } = null!;
+        public string? Note {get; set; }
 
         public ICollection<Ticket> Tickets { get; set; } = [];
     }

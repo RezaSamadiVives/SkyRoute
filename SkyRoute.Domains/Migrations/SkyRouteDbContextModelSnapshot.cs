@@ -71,7 +71,7 @@ namespace SkyRoute.Domains.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdentityUser");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("SkyRoute.Domains.Entities.Airline", b =>
@@ -107,6 +107,9 @@ namespace SkyRoute.Domains.Migrations
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reference")
                         .IsRequired()
@@ -375,6 +378,9 @@ namespace SkyRoute.Domains.Migrations
 
                     b.Property<int>("FlightId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsBusiness")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MealOptionId")
                         .HasColumnType("int");
