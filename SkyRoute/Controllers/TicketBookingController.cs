@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkyRoute.Domains.Entities;
 using SkyRoute.Domains.Models;
-using SkyRoute.Extensions;
 using SkyRoute.Helpers;
 using SkyRoute.Services;
 using SkyRoute.Services.Interfaces;
