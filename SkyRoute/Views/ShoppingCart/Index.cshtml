@@ -4,8 +4,8 @@
 }
 
 <div class="container py-5">
-      @await Html.PartialAsync("_BookingWizard", "overzicht") 
-    </div>
+    @await Html.PartialAsync("_BookingWizard", "overzicht")
+</div>
 
 <h2 class="mb-4">🛒 Shopping Cart</h2>
 @Html.AntiForgeryToken()
@@ -38,7 +38,7 @@
         </div>
         <div class="card-body">
             <p><strong>Vluchten:</strong> @string.Join(", ", Model.RetourFlights.Flights)</p>
-              <p><strong>Vluchten:</strong> @Model.FlightSearchSessionVM?.ToCity - @Model.FlightSearchSessionVM?.FromCity</p>
+            <p><strong>Vluchten:</strong> @Model.FlightSearchSessionVM?.ToCity - @Model.FlightSearchSessionVM?.FromCity</p>
             <p><strong>Prijs:</strong> €@Model.RetourFlights.TotalPrice.ToString("0.00")</p>
         </div>
     </div>
@@ -49,18 +49,18 @@
     <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center"><strong>Passagiers</strong></div>
         <div class="card-body">
-                @foreach (var passenger in Model.Passengers)
-                {
-                    <p>@passenger.FirstName @passenger.LastName</p>
-                }
-          
+            @foreach (var passenger in Model.Passengers)
+            {
+                <p>@passenger.FirstName @passenger.LastName</p>
+            }
+
         </div>
     </div>
 }
 
 <div class="text-end mt-3">
-    <h4>Totaal: €@Model.Total.ToString("0.00")</h4>
-     @if (Model.IsConfirmed)
+    <h4>Totaal: € @Model.Total.ToString("0.00")</h4>
+    @if (Model.IsConfirmed)
     {
         <form method="post" asp-controller="ShoppingCart" asp-action="Buy">
             @Html.AntiForgeryToken()
@@ -71,27 +71,44 @@
     }
     else
     {
-        <a class="btn btn-primary" href="@Url.Action("Index", "OrderSummary")">
-            Bevestig je boeking
-        </a>
+        @if (Model.Passengers?.Count <= 0)
+        {
+            <a class="btn btn-primary" href="@Url.Action("Index", "Passengers")">
+                Voeg passagiers toe
+            </a>
+        }
+        else if (Model.MealChoicePassengerSessions.Count <= 0)
+        {
+            <a class="btn btn-primary" href="@Url.Action("Index", "MealOption")">
+                Voeg maaltijd toe
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-primary" href="@Url.Action("Index", "OrderSummary")">
+                Bevestig je boeking
+            </a>
+        }
+
     }
 </div>
 
- 
+
 
 <!-- Modal -->
 <div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-success text-white">
-      <div class="modal-header">
-        <h5 class="modal-title" id="removeModalLabel">Verwijderd</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Sluiten"></button>
-      </div>
-      <div class="modal-body">
-        Het item is succesvol uit de winkelwagen verwijderd.
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-success text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeModalLabel">Verwijderd</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                Het item is succesvol uit de winkelwagen verwijderd.
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 @section Scripts {

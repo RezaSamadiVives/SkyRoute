@@ -16,10 +16,10 @@
                 decimal price = 0;
 
                 if (OutboundFlights?.Flights?.Count > 0)
-                    price += OutboundFlights.TotalPrice * Passengers.Count;
+                    price += Passengers.Count > 0 ? OutboundFlights.TotalPrice * Passengers.Count : OutboundFlights.TotalPrice;
 
                 if (RetourFlights?.Flights?.Count > 0)
-                    price += RetourFlights.TotalPrice * Passengers.Count;
+                    price += Passengers.Count > 0 ? RetourFlights.TotalPrice * Passengers.Count : RetourFlights.TotalPrice ;
 
                 return price;
             }

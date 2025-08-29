@@ -195,6 +195,10 @@ namespace SkyRoute.Controllers
                 return NotFound();
             }
             var model = _mapper.Map<BookingVM>(booking);
+
+            // sessie verwijderen
+            _shoppingcartService.ClearSession(HttpContext.Session);
+
             return View(model);
 
         }
